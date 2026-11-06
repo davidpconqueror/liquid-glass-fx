@@ -603,14 +603,15 @@ export function App() {
         >
           {/* Showcase Area */}
           <div>
-            <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
+            <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
               <button
                 onClick={() => setActiveTab("panel")}
                 style={{
-                  padding: "10px 22px",
-                  borderRadius: 24,
+                  padding: "9px 20px",
+                  borderRadius: 20,
                   border: "none",
                   fontWeight: 600,
+                  fontSize: 13,
                   cursor: "pointer",
                   background:
                     activeTab === "panel" ? "rgba(56, 189, 248, 0.32)" : "rgba(255,255,255,0.08)",
@@ -623,10 +624,11 @@ export function App() {
               <button
                 onClick={() => setActiveTab("lens")}
                 style={{
-                  padding: "10px 22px",
-                  borderRadius: 24,
+                  padding: "9px 20px",
+                  borderRadius: 20,
                   border: "none",
                   fontWeight: 600,
+                  fontSize: 13,
                   cursor: "pointer",
                   background:
                     activeTab === "lens" ? "rgba(56, 189, 248, 0.32)" : "rgba(255,255,255,0.08)",
@@ -741,7 +743,7 @@ export function App() {
               <div
                 style={{
                   position: "relative",
-                  height: 540,
+                  height: 550,
                   borderRadius: 24,
                   border: "1px solid rgba(255,255,255,0.15)",
                   overflow: "hidden",
@@ -753,7 +755,7 @@ export function App() {
                   id="lens-stage-canvas"
                   ref={stageCanvasRef}
                   width={800}
-                  height={540}
+                  height={550}
                   style={{
                     position: "absolute",
                     inset: 0,
@@ -783,12 +785,10 @@ export function App() {
             )}
           </div>
 
-          {/* Controls Panel (Sticky & Fully Scrollable) */}
+          {/* Controls Panel */}
           <div
             style={{
-              position: "sticky",
-              top: 24,
-              maxHeight: "calc(100vh - 48px)",
+              height: 600,
               display: "flex",
               flexDirection: "column",
             }}
@@ -797,36 +797,63 @@ export function App() {
               preset="default"
               theme={theme}
               style={{
-                padding: "20px 22px",
+                height: 600,
+                borderRadius: 24,
+                overflow: "hidden",
                 display: "flex",
                 flexDirection: "column",
-                gap: 18,
-                height: "100%",
-                maxHeight: "calc(100vh - 48px)",
-                overflowY: "auto",
-                overflowX: "hidden",
+                padding: 0,
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h3 style={{ fontSize: 17, fontWeight: 700 }}>Optical Parameters</h3>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "16px 20px 14px",
+                  borderBottom:
+                    theme === "dark"
+                      ? "1px solid rgba(255, 255, 255, 0.08)"
+                      : "1px solid rgba(0, 0, 0, 0.06)",
+                  flexShrink: 0,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 16 }}>⚙️</span>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Optical Parameters</h3>
+                </div>
                 <button
                   onClick={resetPreset}
                   style={{
-                    background: "rgba(255,255,255,0.08)",
+                    background: theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
                     border: "none",
                     borderRadius: 8,
                     padding: "4px 10px",
                     fontSize: 11,
                     color: "inherit",
                     cursor: "pointer",
-                    fontWeight: 500,
+                    fontWeight: 600,
+                    transition: "all 0.15s ease",
                   }}
                 >
                   Reset
                 </button>
               </div>
 
-              {/* Presets */}
+              {/* Scrollable Sliders & Presets Area with Internal Glass Scrollbar */}
+              <div
+                className="glass-scrollbar"
+                style={{
+                  flex: 1,
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                  padding: "16px 20px 24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 16,
+                }}
+              >
+                {/* Presets */}
               <div>
                 <label style={{ fontSize: 11, fontWeight: 700, opacity: 0.7, textTransform: "uppercase", letterSpacing: "0.5px" }}>
                   Curated Presets
@@ -950,6 +977,7 @@ export function App() {
                   </div>
                 ))}
               </div>
+              </div>
             </LiquidGlassPanel>
           </div>
         </div>
@@ -980,26 +1008,40 @@ export function App() {
             style={{
               maxWidth: 720,
               width: "100%",
-              maxHeight: "88vh",
-              overflowY: "auto",
-              padding: "36px 38px",
+              maxHeight: "85vh",
               borderRadius: 24,
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              padding: 0,
               boxShadow: "0 25px 70px rgba(0,0,0,0.6)",
               border: "1px solid rgba(255, 255, 255, 0.2)",
             }}
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
-            {/* Header with Title and Close Button */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+            {/* Header with Title and Close Button (Pinned) */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "22px 28px 18px",
+                borderBottom:
+                  theme === "dark"
+                    ? "1px solid rgba(255, 255, 255, 0.08)"
+                    : "1px solid rgba(0, 0, 0, 0.06)",
+                flexShrink: 0,
+              }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <span style={{ fontSize: 28 }}>
                   {activeModal === "quickstart" ? "🚀" : "📚"}
                 </span>
                 <div>
-                  <h2 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>
+                  <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>
                     {activeModal === "quickstart" ? "Getting Started with liquid-glass-fx" : "Documentation & API Reference"}
                   </h2>
-                  <p style={{ fontSize: 13, opacity: 0.7, margin: "4px 0 0" }}>
+                  <p style={{ fontSize: 12.5, opacity: 0.7, margin: "3px 0 0" }}>
                     Physical optical glass in pure web standards (zero runtime dependencies)
                   </p>
                 </div>
@@ -1018,11 +1060,23 @@ export function App() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  transition: "background 0.15s ease",
                 }}
               >
                 ✕
               </button>
             </div>
+
+            {/* Scrollable Modal Content with Sleek Internal Glass Scrollbar */}
+            <div
+              className="glass-scrollbar"
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                overflowX: "hidden",
+                padding: "24px 28px 28px",
+              }}
+            >
 
             {/* Quickstart Tab Content */}
             {activeModal === "quickstart" && (
@@ -1292,6 +1346,7 @@ createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`
                 </div>
               </div>
             )}
+            </div>
           </LiquidGlassPanel>
         </div>
       )}

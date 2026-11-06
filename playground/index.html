@@ -21,26 +21,34 @@
         background: #f1f5f9;
         color: #0f172a;
       }
-      /* Clean scrollbars for controls panel */
+      /* Clean custom scrollbars with track margins */
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
       }
       ::-webkit-scrollbar-track {
         background: transparent;
+        margin: 8px 0;
       }
       ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.22);
+        border-radius: 9999px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: rgba(56, 189, 248, 0.5);
+        background: rgba(56, 189, 248, 0.55);
       }
       body.light ::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.22);
       }
       body.light ::-webkit-scrollbar-thumb:hover {
-        background: rgba(14, 165, 233, 0.6);
+        background: rgba(14, 165, 233, 0.65);
+      }
+      .glass-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+      }
+      body.light .glass-scrollbar {
+        scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
       }
       @keyframes floatOrb1 {
         0%, 100% { transform: translate(0px, 0px) scale(1); }
