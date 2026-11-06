@@ -79,6 +79,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^10.14.0",
     "jsdom": "^26.0.0",
+    "lucide-react": "^1.69.0",
     "prettier": "^3.9.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

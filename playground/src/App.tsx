@@ -1,4 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
+import {
+  Sparkles,
+  Sun,
+  Moon,
+  Rocket,
+  BookOpen,
+  Waves,
+  Palette,
+  Grid,
+  Zap,
+  LayoutGrid,
+  Gem,
+  Rainbow,
+  Sliders,
+  RotateCcw,
+  X,
+  Copy,
+  Check,
+  ExternalLink,
+} from "lucide-react";
 import { LiquidGlassPanel, LiquidGlassLens } from "../../src/react";
 import { GLASS_PRESETS, type GlassPresetKey, type GlassConfig } from "../../src";
 
@@ -521,8 +541,8 @@ export function App() {
             marginBottom: 24,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ fontSize: 24 }}>✨</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <Sparkles size={20} style={{ color: "#38bdf8" }} />
             <strong style={{ fontSize: 20, letterSpacing: "-0.5px" }}>liquid-glass-fx</strong>
             <span
               style={{
@@ -533,7 +553,7 @@ export function App() {
                 border: "1px solid rgba(255,255,255,0.18)",
               }}
             >
-              v0.1.0
+              v0.1.1
             </span>
           </div>
 
@@ -542,6 +562,9 @@ export function App() {
             <button
               onClick={toggleTheme}
               style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
                 background: "rgba(255,255,255,0.08)",
                 border: "1px solid rgba(255,255,255,0.18)",
                 padding: "8px 16px",
@@ -552,7 +575,15 @@ export function App() {
                 fontSize: 13,
               }}
             >
-              {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
+              {theme === "dark" ? (
+                <>
+                  <Sun size={14} /> Light Mode
+                </>
+              ) : (
+                <>
+                  <Moon size={14} /> Dark Mode
+                </>
+              )}
             </button>
             <LiquidGlassPanel
               as="button"
@@ -560,6 +591,9 @@ export function App() {
               interactive={true}
               onClick={() => setActiveModal("quickstart")}
               style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
                 padding: "8px 20px",
                 color: "inherit",
                 fontWeight: 600,
@@ -567,7 +601,7 @@ export function App() {
                 cursor: "pointer",
               }}
             >
-              Get Started 🚀
+              Get Started <Rocket size={15} />
             </LiquidGlassPanel>
           </div>
         </LiquidGlassPanel>
@@ -602,16 +636,19 @@ export function App() {
             </span>
             <div style={{ display: "flex", gap: 6 }}>
               {[
-                { key: "aurora", label: "🌈 Cyber Aurora" },
-                { key: "fluid", label: "🎨 3D Fluid Rainbow" },
-                { key: "blueprint", label: "📐 Blueprint Grid" },
-                { key: "neon", label: "⚡ Neon Laser" },
-                { key: "checker", label: "🏁 Optical Checker" },
-              ].map(({ key, label }) => (
+                { key: "aurora", label: "Cyber Aurora", Icon: Waves },
+                { key: "fluid", label: "3D Fluid Rainbow", Icon: Palette },
+                { key: "blueprint", label: "Blueprint Grid", Icon: Grid },
+                { key: "neon", label: "Neon Laser", Icon: Zap },
+                { key: "checker", label: "Optical Checker", Icon: LayoutGrid },
+              ].map(({ key, label, Icon }) => (
                 <button
                   key={key}
                   onClick={() => setBgTheme(key as BackgroundKey)}
                   style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
                     padding: "6px 14px",
                     borderRadius: 14,
                     fontSize: 12.5,
@@ -624,6 +661,7 @@ export function App() {
                     transition: "all 0.15s ease",
                   }}
                 >
+                  <Icon size={14} style={{ opacity: bgTheme === key ? 1 : 0.75 }} />
                   {label}
                 </button>
               ))}
@@ -722,13 +760,17 @@ export function App() {
                       interactive
                       onClick={() => setActiveTab("lens")}
                       style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
                         padding: "12px 28px",
                         color: "inherit",
                         fontWeight: 600,
                         cursor: "pointer",
                       }}
                     >
-                      Explore Shaders ⚡
+                      <Sparkles size={16} />
+                      Explore Shaders
                     </LiquidGlassPanel>
                     <LiquidGlassPanel
                       as="button"
@@ -736,13 +778,17 @@ export function App() {
                       interactive
                       onClick={() => setActiveModal("docs")}
                       style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
                         padding: "12px 28px",
                         color: "inherit",
                         fontWeight: 600,
                         cursor: "pointer",
                       }}
                     >
-                      Documentation 📚
+                      <BookOpen size={16} />
+                      Documentation
                     </LiquidGlassPanel>
                   </div>
                 </LiquidGlassPanel>
@@ -761,7 +807,21 @@ export function App() {
                     theme={theme}
                     style={{ padding: 24 }}
                   >
-                    <div style={{ fontSize: 30, marginBottom: 10 }}>💎</div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 44,
+                        height: 44,
+                        borderRadius: 12,
+                        background: "rgba(56, 189, 248, 0.15)",
+                        color: "#38bdf8",
+                        marginBottom: 14,
+                      }}
+                    >
+                      <Gem size={24} />
+                    </div>
                     <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 700 }}>
                       Zero Overhead
                     </h3>
@@ -777,7 +837,21 @@ export function App() {
                     theme={theme}
                     style={{ padding: 24 }}
                   >
-                    <div style={{ fontSize: 30, marginBottom: 10 }}>🌈</div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 44,
+                        height: 44,
+                        borderRadius: 12,
+                        background: "rgba(236, 72, 153, 0.15)",
+                        color: "#ec4899",
+                        marginBottom: 14,
+                      }}
+                    >
+                      <Rainbow size={24} />
+                    </div>
                     <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 700 }}>
                       RGB Dispersion
                     </h3>
@@ -793,7 +867,21 @@ export function App() {
                     theme={theme}
                     style={{ padding: 24 }}
                   >
-                    <div style={{ fontSize: 30, marginBottom: 10 }}>⚡</div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 44,
+                        height: 44,
+                        borderRadius: 12,
+                        background: "rgba(250, 204, 21, 0.15)",
+                        color: "#facc15",
+                        marginBottom: 14,
+                      }}
+                    >
+                      <Zap size={24} />
+                    </div>
                     <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 700 }}>Any JS App</h3>
                     <p style={{ fontSize: 13.5, opacity: 0.8, lineHeight: 1.55 }}>
                       Zero runtime dependencies for vanilla JS, Vue, Svelte, and a first-class React
@@ -883,12 +971,15 @@ export function App() {
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 16 }}>⚙️</span>
+                  <Sliders size={16} style={{ color: "#38bdf8" }} />
                   <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Optical Parameters</h3>
                 </div>
                 <button
                   onClick={resetPreset}
                   style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 4,
                     background: theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
                     border: "none",
                     borderRadius: 8,
@@ -900,6 +991,7 @@ export function App() {
                     transition: "all 0.15s ease",
                   }}
                 >
+                  <RotateCcw size={11} />
                   Reset
                 </button>
               </div>
@@ -1161,8 +1253,22 @@ export function App() {
                 flexShrink: 0,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ fontSize: 28 }}>{activeModal === "quickstart" ? "🚀" : "📚"}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 44,
+                    height: 44,
+                    borderRadius: 14,
+                    background: "rgba(56, 189, 248, 0.15)",
+                    color: "#38bdf8",
+                    flexShrink: 0,
+                  }}
+                >
+                  {activeModal === "quickstart" ? <Rocket size={24} /> : <BookOpen size={24} />}
+                </div>
                 <div>
                   <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>
                     {activeModal === "quickstart"
@@ -1176,6 +1282,7 @@ export function App() {
               </div>
               <button
                 onClick={() => setActiveModal(null)}
+                aria-label="Close modal"
                 style={{
                   background: "rgba(255,255,255,0.1)",
                   border: "none",
@@ -1184,14 +1291,13 @@ export function App() {
                   height: 34,
                   cursor: "pointer",
                   color: "inherit",
-                  fontSize: 16,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   transition: "background 0.15s ease",
                 }}
               >
-                ✕
+                <X size={18} />
               </button>
             </div>
 
@@ -1239,6 +1345,9 @@ export function App() {
                       <button
                         onClick={copyInstallCommand}
                         style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 5,
                           background: copied ? "#10b981" : "rgba(56, 189, 248, 0.25)",
                           border: "1px solid rgba(56, 189, 248, 0.4)",
                           color: "inherit",
@@ -1249,7 +1358,15 @@ export function App() {
                           fontWeight: 600,
                         }}
                       >
-                        {copied ? "✓ Copied!" : "Copy"}
+                        {copied ? (
+                          <>
+                            <Check size={13} /> Copied!
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={13} /> Copy
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -1338,6 +1455,10 @@ createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`
                       onClick={() => setActiveModal("docs")}
                       style={{
                         flex: 1,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8,
                         padding: "12px",
                         borderRadius: 12,
                         border: "none",
@@ -1347,7 +1468,8 @@ createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`
                         cursor: "pointer",
                       }}
                     >
-                      View Full API Reference 📚
+                      <BookOpen size={16} />
+                      View Full API Reference
                     </button>
                     <a
                       href="https://github.com/davidpconqueror/liquid-glass-fx"
@@ -1366,7 +1488,7 @@ createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`
                         gap: 6,
                       }}
                     >
-                      GitHub ↗
+                      GitHub <ExternalLink size={14} />
                     </a>
                   </div>
                 </div>
@@ -1564,6 +1686,10 @@ createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`
                       onClick={() => setActiveModal("quickstart")}
                       style={{
                         flex: 1,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8,
                         padding: "12px",
                         borderRadius: 12,
                         border: "none",
@@ -1573,7 +1699,8 @@ createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`
                         cursor: "pointer",
                       }}
                     >
-                      Quick Start & Installation 🚀
+                      <Rocket size={16} />
+                      Quick Start & Installation
                     </button>
                     <a
                       href="https://github.com/davidpconqueror/liquid-glass-fx"
@@ -1592,7 +1719,7 @@ createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`
                         gap: 6,
                       }}
                     >
-                      View on GitHub ↗
+                      View on GitHub <ExternalLink size={14} />
                     </a>
                   </div>
                 </div>
