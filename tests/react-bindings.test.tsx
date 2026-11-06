@@ -67,6 +67,33 @@ describe("React Bindings", () => {
     unmount();
   });
 
+  it("should update LiquidGlassLens options without remounting or replacing the canvas element", () => {
+    const { rerender } = render(
+      <LiquidGlassLens
+        preset="magnifier"
+        config={{ refraction: 1.0 }}
+        data-testid="lens-update"
+      />
+    );
+
+    const lens = screen.getByTestId("lens-update");
+    const initialCanvas = lens.querySelector("canvas");
+    expect(initialCanvas).not.toBeNull();
+
+    // Rerender with new parameter
+    rerender(
+      <LiquidGlassLens
+        preset="magnifier"
+        config={{ refraction: 2.0 }}
+        data-testid="lens-update"
+      />
+    );
+
+    const updatedCanvas = lens.querySelector("canvas");
+    // Canvas reference must be identical (not destroyed/recreated)
+    expect(updatedCanvas).toBe(initialCanvas);
+  });
+
   it("should provide useDragPhysics hook", () => {
     function TestComponent() {
       const { position, isDragging } = useDragPhysics({

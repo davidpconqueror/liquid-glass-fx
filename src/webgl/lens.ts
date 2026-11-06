@@ -131,6 +131,9 @@ export function createLiquidGlassLens(
       },
     });
     dragController.attach(container);
+    if (currentOptions.initialPosition) {
+      container.style.transform = `translate3d(${currentPos.x}px, ${currentPos.y}px, 0)`;
+    }
   }
 
   // Listeners
@@ -148,17 +151,33 @@ export function createLiquidGlassLens(
 
   return {
     setPosition(x: number, y: number) {
+      currentPos = { x, y };
+      container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       if (dragController) {
         dragController.setPosition(x, y);
       } else {
-        currentPos = { x, y };
-        container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        scheduleRender();
+        renderFrame();
       }
     },
     update(newOptions: Partial<LensOptions>) {
       currentOptions = { ...currentOptions, ...newOptions };
-      scheduleRender();
+      const wantsDrag = currentOptions.draggable || currentOptions.floating;
+      if (wantsDrag && !dragController) {
+        dragController = new DragPhysicsController({
+          initialPosition: currentPos,
+          onPositionChange: (pos) => {
+            currentPos = { ...pos };
+            container.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+            currentOptions.onPositionChange?.(pos);
+            scheduleRender();
+          },
+        });
+        dragController.attach(container);
+      } else if (!wantsDrag && dragController) {
+        dragController.destroy();
+        dragController = null;
+      }
+      renderFrame();
     },
     destroy() {
       isMounted = false;

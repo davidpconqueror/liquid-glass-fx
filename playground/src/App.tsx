@@ -16,10 +16,24 @@ function drawStageBackdrop(
   bgTheme: BackgroundKey,
   theme: "dark" | "light"
 ) {
+  const dpr = window.devicePixelRatio || 1;
+  const parent = canvas.parentElement;
+  const cssW = parent?.clientWidth || canvas.clientWidth || 800;
+  const cssH = parent?.clientHeight || canvas.clientHeight || 540;
+  const targetW = Math.round(cssW * dpr);
+  const targetH = Math.round(cssH * dpr);
+
+  if (canvas.width !== targetW || canvas.height !== targetH) {
+    canvas.width = targetW;
+    canvas.height = targetH;
+  }
+
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
-  const w = canvas.width;
-  const h = canvas.height;
+  ctx.save();
+  ctx.scale(dpr, dpr);
+  const w = cssW;
+  const h = cssH;
   const isDark = theme === "dark";
 
   ctx.fillStyle = isDark ? "#070b14" : "#f8fafc";
@@ -141,6 +155,7 @@ function drawStageBackdrop(
   ctx.fillRect(192, 134, 70, 8);
   ctx.fillStyle = "#10b981";
   ctx.fillRect(270, 134, 70, 8);
+  ctx.restore();
 }
 
 export function App() {
@@ -166,6 +181,13 @@ export function App() {
   useEffect(() => {
     if (activeTab === "lens" && stageCanvasRef.current) {
       drawStageBackdrop(stageCanvasRef.current, bgTheme, theme);
+      const handleResize = () => {
+        if (stageCanvasRef.current) {
+          drawStageBackdrop(stageCanvasRef.current, bgTheme, theme);
+        }
+      };
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
     }
   }, [activeTab, bgTheme, theme]);
 

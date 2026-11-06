@@ -35,7 +35,9 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
     forwardedRef
   ) {
     const internalRef = React.useRef<HTMLDivElement | null>(null);
+    const handleRef = React.useRef<ReturnType<typeof createLiquidGlassLens> | null>(null);
 
+    // Mount lens once on the container
     React.useEffect(() => {
       const el = internalRef.current;
       if (!el) return;
@@ -50,10 +52,27 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
         initialPosition,
         onPositionChange,
       });
+      handleRef.current = handle;
 
       return () => {
         handle.destroy();
+        handleRef.current = null;
       };
+    }, []);
+
+    // Efficiently update options without unmounting or resetting position
+    React.useEffect(() => {
+      if (handleRef.current) {
+        handleRef.current.update({
+          preset,
+          config,
+          background,
+          backgroundSelector,
+          draggable,
+          floating,
+          onPositionChange,
+        });
+      }
     }, [
       preset,
       config,
@@ -61,7 +80,6 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
       backgroundSelector,
       draggable,
       floating,
-      initialPosition,
       onPositionChange,
     ]);
 
