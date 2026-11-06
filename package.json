@@ -26,8 +26,17 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "playground": "vite playground"
+    "playground": "vite playground",
+    "prepublishOnly": "npm run test && npm run typecheck && npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidpconqueror/liquid-glass-fx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/davidpconqueror/liquid-glass-fx/issues"
+  },
+  "homepage": "https://github.com/davidpconqueror/liquid-glass-fx#readme",
   "keywords": [
     "liquid-glass",
     "glassmorphism",
