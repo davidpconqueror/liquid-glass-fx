@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -51,16 +51,31 @@
         scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
       }
       @keyframes floatOrb1 {
-        0%, 100% { transform: translate(0px, 0px) scale(1); }
-        50% { transform: translate(60px, -45px) scale(1.12); }
+        0%,
+        100% {
+          transform: translate(0px, 0px) scale(1);
+        }
+        50% {
+          transform: translate(60px, -45px) scale(1.12);
+        }
       }
       @keyframes floatOrb2 {
-        0%, 100% { transform: translate(0px, 0px) scale(1); }
-        50% { transform: translate(-55px, 45px) scale(0.92); }
+        0%,
+        100% {
+          transform: translate(0px, 0px) scale(1);
+        }
+        50% {
+          transform: translate(-55px, 45px) scale(0.92);
+        }
       }
       @keyframes floatOrb3 {
-        0%, 100% { transform: translate(0px, 0px) scale(1); }
-        50% { transform: translate(45px, 50px) scale(1.15); }
+        0%,
+        100% {
+          transform: translate(0px, 0px) scale(1);
+        }
+        50% {
+          transform: translate(45px, 50px) scale(1.15);
+        }
       }
       .anim-orb-1 {
         animation: floatOrb1 18s ease-in-out infinite;
@@ -78,4 +93,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

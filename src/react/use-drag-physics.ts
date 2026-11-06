@@ -54,4 +54,3 @@ export function useDragPhysics(options: DragPhysicsOptions = {}) {
     setPosition: (x: number, y: number) => controllerRef.current?.setPosition(x, y),
   };
 }
-

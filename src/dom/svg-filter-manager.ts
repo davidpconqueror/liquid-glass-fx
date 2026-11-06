@@ -62,4 +62,3 @@ export function injectGlassSvgDefs(doc: Document = document): SVGElement | null 
   doc.body.appendChild(svg);
   return svg;
 }
-

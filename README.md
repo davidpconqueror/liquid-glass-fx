@@ -43,6 +43,7 @@ Traditional glassmorphism effects rely on simple `backdrop-filter: blur()`, miss
 3. **Framework Lock-in:** Many solutions are coupled to a single framework or require Tailwind CSS.
 
 ### The `liquid-glass-fx` Solution:
+
 - **Zero Runtime Dependencies for Core:** Pure vanilla TypeScript and raw WebGL ES 1.0.
 - **Dual-Engine Architecture:** Zero-overhead CSS/SVG substrate for UI panels (navbars, cards, buttons) + a shared singleton WebGL shader engine for interactive lenses.
 - **Locked 120 FPS:** Zero DOM rasterization overhead and zero context exhaustion.
@@ -100,6 +101,7 @@ npm install liquid-glass-fx react react-dom
 ### 1. Vanilla JavaScript / TypeScript
 
 #### UI Glass Panel (Navbar, Card, Modal, or Button)
+
 ```typescript
 import { createLiquidGlassPanel } from "liquid-glass-fx";
 
@@ -119,6 +121,7 @@ panel.destroy();
 ```
 
 #### Interactive Draggable WebGL Refraction Lens
+
 ```typescript
 import { createLiquidGlassLens } from "liquid-glass-fx";
 
@@ -269,6 +272,7 @@ onUnmounted(() => {
 ### Vanilla Core APIs
 
 #### `createLiquidGlassPanel(element: HTMLElement, options?: PanelOptions): LiquidGlassPanelHandle`
+
 Attaches hardware-accelerated CSS backdrop filters, 6-tier composite shadows, chromatic rim splitting, and meniscus SVG displacement filters to any HTML element.
 
 - **Parameters (`PanelOptions`):**
@@ -282,6 +286,7 @@ Attaches hardware-accelerated CSS backdrop filters, 6-tier composite shadows, ch
   - `destroy(): void` — Removes applied styles, restores original element style, and detaches event listeners.
 
 #### `createLiquidGlassLens(container: HTMLElement, options?: LensOptions): LiquidGlassLensHandle`
+
 Mounts a WebGL refractive lens with SDF bevel curvature, Snell refraction, RGB dispersion, Blinn-Phong specular glints, and pointer physics.
 
 - **Parameters (`LensOptions`):**
@@ -299,15 +304,19 @@ Mounts a WebGL refractive lens with SDF bevel curvature, Snell refraction, RGB d
   - `destroy(): void` — Cancels animation loop, detaches listeners, and removes mounted canvas.
 
 #### `injectGlassSvgDefs(doc?: Document): SVGElement | null`
+
 Idempotently injects the `<filter id="liquid-meniscus-refract">` definition element into `document.body`. Automatically called by `createLiquidGlassPanel`.
 
 #### `resolveGlassConfig(preset?: GlassPresetKey, overrides?: Partial<GlassConfig>): GlassConfig`
+
 Validates, clamps, and resolves optical configuration against default boundaries.
 
 #### `computeGlassStyle(config: GlassConfig, theme?: 'dark' | 'light' | 'auto'): Record<string, string>`
+
 Pure function returning the CSS property map for inline style application without DOM manipulation.
 
 #### `DragPhysicsController`
+
 Vanilla pointer tracking class handling mouse and touch drag, boundary clamping, and velocity inertia.
 
 ---
@@ -317,15 +326,16 @@ Vanilla pointer tracking class handling mouse and touch drag, boundary clamping,
 Exported from `liquid-glass-fx/react`:
 
 #### `<LiquidGlassPanel />`
+
 Polymorphic React component for UI glass substrates.
 
 ```tsx
 <LiquidGlassPanel
-  as="section"                 // 'div' | 'button' | 'nav' | 'article' | any custom component
-  preset="crystal"             // Named preset
+  as="section" // 'div' | 'button' | 'nav' | 'article' | any custom component
+  preset="crystal" // Named preset
   config={{ blurAmount: 0.3 }} // Custom optical overrides
-  theme="dark"                 // 'dark' | 'light' | 'auto'
-  interactive={true}           // Hover & active depression
+  theme="dark" // 'dark' | 'light' | 'auto'
+  interactive={true} // Hover & active depression
   className="my-panel"
   style={{ padding: 24 }}
 >
@@ -334,6 +344,7 @@ Polymorphic React component for UI glass substrates.
 ```
 
 #### `<LiquidGlassLens />`
+
 Interactive refractive WebGL lens component.
 
 ```tsx
@@ -348,6 +359,7 @@ Interactive refractive WebGL lens component.
 ```
 
 #### `useDragPhysics(options?: DragPhysicsOptions)`
+
 React hook returning `{ position, isDragging, bindElement, setPosition }`.
 
 ---
@@ -356,27 +368,27 @@ React hook returning `{ position, isDragging, bindElement, setPosition }`.
 
 Every glass element in `liquid-glass-fx` is governed by a unified physical optical model:
 
-| Parameter | Type | Default | Range | Physical Meaning |
-|---|---|---|---|---|
-| `blurAmount` | `number` | `0.19` | `0.00 – 1.00` | Background Gaussian blur radius (0 = completely sharp, 1 = maximum blur). |
-| `refraction` | `number` | `0.69` | `0.00 – 2.00` | Snell's law refraction bending strength through front and rear glass boundaries. |
-| `chromAberration` | `number` | `0.05` | `0.00 – 0.50` | RGB wavelength dispersion (prismatic color fringing splitting red, green, and blue). |
-| `edgeHighlight` | `number` | `0.05` | `0.00 – 2.00` | Intensity of the inner meniscus rim lighting and grazing edge reflection. |
-| `specular` | `number` | `0.00` | `0.00 – 1.00` | Intensity of 2-light studio Blinn-Phong specular glints. |
-| `fresnel` | `number` | `1.00` | `0.00 – 2.00` | Schlick Fresnel reflection coefficient at grazing view angles. |
-| `distortion` | `number` | `0.00` | `0.00 – 1.00` | Micro-surface procedural noise distortion. |
-| `cornerRadius` | `number` | `40` | `0 – 9999` | Corner rounding in pixels (set `9999` for stadium pill shape). |
-| `zRadius` | `number` | `40` | `0 – 100` | Bevel thickness and lens cross-section curvature. |
-| `opacity` | `number` | `1.00` | `0.00 – 1.00` | Overall glass panel transparency. |
-| `saturation` | `number` | `0.00` | `-1.00 – 1.00` | Vibrancy and saturation adjustment for refracted light. |
-| `tintStrength` | `number` | `0.00` | `0.00 – 1.00` | Cool optical glass tint. |
-| `brightness` | `number` | `0.00` | `-0.50 – 0.50` | Exposure boost/cut. |
-| `shadowOpacity` | `number` | `0.30` | `0.00 – 1.00` | Drop shadow darkness. |
-| `shadowSpread` | `number` | `10` | `0 – 50` | Drop shadow blur spread radius. |
-| `shadowOffsetY` | `number` | `1` | `-10 – 30` | Drop shadow vertical light offset in pixels. |
-| `bevelMode` | `0 \| 1` | `0` | `0` or `1` | `0` = Biconvex pill lens (flat center, curved bevel); `1` = Dome magnifier (continuous spherical magnification). |
-| `floating` | `boolean` | `false` | `boolean` | Enables pointer drag & inertia physics. |
-| `button` | `boolean` | `false` | `boolean` | Tactile hover lift and click active scale. |
+| Parameter         | Type      | Default | Range          | Physical Meaning                                                                                                 |
+| ----------------- | --------- | ------- | -------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `blurAmount`      | `number`  | `0.19`  | `0.00 – 1.00`  | Background Gaussian blur radius (0 = completely sharp, 1 = maximum blur).                                        |
+| `refraction`      | `number`  | `0.69`  | `0.00 – 2.00`  | Snell's law refraction bending strength through front and rear glass boundaries.                                 |
+| `chromAberration` | `number`  | `0.05`  | `0.00 – 0.50`  | RGB wavelength dispersion (prismatic color fringing splitting red, green, and blue).                             |
+| `edgeHighlight`   | `number`  | `0.05`  | `0.00 – 2.00`  | Intensity of the inner meniscus rim lighting and grazing edge reflection.                                        |
+| `specular`        | `number`  | `0.00`  | `0.00 – 1.00`  | Intensity of 2-light studio Blinn-Phong specular glints.                                                         |
+| `fresnel`         | `number`  | `1.00`  | `0.00 – 2.00`  | Schlick Fresnel reflection coefficient at grazing view angles.                                                   |
+| `distortion`      | `number`  | `0.00`  | `0.00 – 1.00`  | Micro-surface procedural noise distortion.                                                                       |
+| `cornerRadius`    | `number`  | `40`    | `0 – 9999`     | Corner rounding in pixels (set `9999` for stadium pill shape).                                                   |
+| `zRadius`         | `number`  | `40`    | `0 – 100`      | Bevel thickness and lens cross-section curvature.                                                                |
+| `opacity`         | `number`  | `1.00`  | `0.00 – 1.00`  | Overall glass panel transparency.                                                                                |
+| `saturation`      | `number`  | `0.00`  | `-1.00 – 1.00` | Vibrancy and saturation adjustment for refracted light.                                                          |
+| `tintStrength`    | `number`  | `0.00`  | `0.00 – 1.00`  | Cool optical glass tint.                                                                                         |
+| `brightness`      | `number`  | `0.00`  | `-0.50 – 0.50` | Exposure boost/cut.                                                                                              |
+| `shadowOpacity`   | `number`  | `0.30`  | `0.00 – 1.00`  | Drop shadow darkness.                                                                                            |
+| `shadowSpread`    | `number`  | `10`    | `0 – 50`       | Drop shadow blur spread radius.                                                                                  |
+| `shadowOffsetY`   | `number`  | `1`     | `-10 – 30`     | Drop shadow vertical light offset in pixels.                                                                     |
+| `bevelMode`       | `0 \| 1`  | `0`     | `0` or `1`     | `0` = Biconvex pill lens (flat center, curved bevel); `1` = Dome magnifier (continuous spherical magnification). |
+| `floating`        | `boolean` | `false` | `boolean`      | Enables pointer drag & inertia physics.                                                                          |
+| `button`          | `boolean` | `false` | `boolean`      | Tactile hover lift and click active scale.                                                                       |
 
 ---
 
@@ -389,31 +401,37 @@ import { GLASS_PRESETS } from "liquid-glass-fx";
 ```
 
 ### 1. `crystal`
+
 - **Characteristics:** Ultra-clear optical crown glass with high refraction, crisp specular glints, and visible chromatic dispersion.
 - **Best for:** Hero showcases, floating cards, navigation bars.
 - **Key values:** `refraction: 0.95`, `chromAberration: 0.12`, `edgeHighlight: 1.15`, `fresnel: 1.4`, `specular: 0.45`.
 
 ### 2. `frosted`
+
 - **Characteristics:** Soft sand-blasted diffuse glass with high blur and subdued edge reflections.
 - **Best for:** Modals, dialogs, sidebar panels, content backgrounds where text readability is paramount.
 - **Key values:** `blurAmount: 0.45`, `refraction: 0.35`, `chromAberration: 0.02`, `fresnel: 0.8`.
 
 ### 3. `obsidian`
+
 - **Characteristics:** Deep tinted smoky black glass with strong contrast and rich shadows.
 - **Best for:** Dark mode UI, luxury dark aesthetics, code blocks.
 - **Key values:** `brightness: -0.15`, `shadowOpacity: 0.6`, `specular: 0.6`, `fresnel: 1.2`.
 
 ### 4. `pill`
+
 - **Characteristics:** Stadium-rounded geometry (`cornerRadius: 9999`) with subtle bevel and tactile interactive press dynamics.
 - **Best for:** Buttons, floating badges, segmented pills, search bars.
 - **Key values:** `cornerRadius: 9999`, `zRadius: 20`, `button: true`.
 
 ### 5. `magnifier`
+
 - **Characteristics:** Spherical dome magnifier (`bevelMode: 1`) that physically magnifies typography and graphics underneath with radial Snell dispersion.
 - **Best for:** Interactive Hero showcases, image zooming, lens inspection tools.
 - **Key values:** `bevelMode: 1`, `refraction: 1.5`, `chromAberration: 0.18`, `floating: true`.
 
 ### 6. `default`
+
 - **Characteristics:** Balanced everyday UI glass substrate providing immediate glassmorphic depth.
 
 ---
@@ -443,6 +461,7 @@ When using the WebGL lens engine (`createLiquidGlassLens` or `<LiquidGlassLens /
 ## SSR & Next.js Compatibility
 
 `liquid-glass-fx` is 100% safe for Server-Side Rendering (Next.js App Router, React Server Components, Nuxt, SvelteKit, Astro):
+
 - All DOM and WebGL operations guard on `typeof window !== "undefined"` and `typeof document !== "undefined"`.
 - `<LiquidGlassPanel />` renders valid semantic HTML with inline fallback substrate styles during SSR, ensuring zero layout shift and hydration mismatches.
 - WebGL contexts are initialized exclusively on the client inside lifecycle hooks.

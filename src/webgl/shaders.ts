@@ -240,4 +240,3 @@ void main() {
   gl_FragColor = vec4(fin, mask * u_alpha);
 }
 `;
-

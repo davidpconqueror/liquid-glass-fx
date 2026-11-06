@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  LiquidGlassPanel,
-  LiquidGlassLens,
-} from "../../src/react";
-import {
-  GLASS_PRESETS,
-  type GlassPresetKey,
-  type GlassConfig,
-} from "../../src";
+import { LiquidGlassPanel, LiquidGlassLens } from "../../src/react";
+import { GLASS_PRESETS, type GlassPresetKey, type GlassConfig } from "../../src";
 
 type BackgroundKey = "aurora" | "blueprint" | "fluid" | "neon" | "checker";
 
@@ -45,7 +38,7 @@ function drawStageBackdrop(
     const c2 = isDark ? "#1e293b" : "#e2e8f0";
     for (let x = 0; x < w; x += size) {
       for (let y = 0; y < h; y += size) {
-        ctx.fillStyle = ((x / size) + (y / size)) % 2 === 0 ? c1 : c2;
+        ctx.fillStyle = (x / size + y / size) % 2 === 0 ? c1 : c2;
         ctx.fillRect(x, y, size, size);
       }
     }
@@ -227,8 +220,8 @@ export function App() {
               ? "#030816"
               : "#070b14"
             : bgTheme === "blueprint"
-            ? "#e2e8f0"
-            : "#f8fafc",
+              ? "#e2e8f0"
+              : "#f8fafc",
       }}
     >
       {/* =========================================================================
@@ -237,7 +230,15 @@ export function App() {
 
       {/* 1. Cyber Aurora Mesh with Animated High-Contrast Blobs */}
       {bgTheme === "aurora" && (
-        <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 0,
+            overflow: "hidden",
+          }}
+        >
           {/* Dot Matrix Pattern for sharp refraction edges */}
           <div
             style={{
@@ -307,7 +308,15 @@ export function App() {
 
       {/* 2. Engineering Blueprint & Telemetry Grid (Lines bend dramatically under glass) */}
       {bgTheme === "blueprint" && (
-        <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 0,
+            overflow: "hidden",
+          }}
+        >
           {/* 36px Coordinate Blueprint Grid */}
           <div
             style={{
@@ -333,7 +342,8 @@ export function App() {
               transform: "translate(-50%, -50%)",
               borderRadius: "50%",
               border: "1px dashed rgba(56, 189, 248, 0.35)",
-              boxShadow: "0 0 0 80px rgba(56, 189, 248, 0.05), 0 0 0 160px rgba(56, 189, 248, 0.03)",
+              boxShadow:
+                "0 0 0 80px rgba(56, 189, 248, 0.05), 0 0 0 160px rgba(56, 189, 248, 0.03)",
             }}
           />
           {/* Glowing Cobalt & Cyan Underglow */}
@@ -354,7 +364,15 @@ export function App() {
 
       {/* 3. Vibrant Fluid 3D Rainbow Ribbon (High dynamic range optical prism) */}
       {bgTheme === "fluid" && (
-        <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 0,
+            overflow: "hidden",
+          }}
+        >
           <div
             style={{
               position: "absolute",
@@ -389,7 +407,15 @@ export function App() {
 
       {/* 4. Neon Cyberpunk Laser Grid */}
       {bgTheme === "neon" && (
-        <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 0,
+            overflow: "hidden",
+          }}
+        >
           <div
             style={{
               position: "absolute",
@@ -440,7 +466,15 @@ export function App() {
 
       {/* 5. Optical Checkerboard & Contrast Bars (Maximum refraction contrast) */}
       {bgTheme === "checker" && (
-        <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 0,
+            overflow: "hidden",
+          }}
+        >
           <div
             style={{
               position: "absolute",
@@ -548,11 +582,22 @@ export function App() {
             padding: "10px 18px",
             borderRadius: 18,
             background: theme === "dark" ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.04)",
-            border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.08)",
+            border:
+              theme === "dark"
+                ? "1px solid rgba(255, 255, 255, 0.1)"
+                : "1px solid rgba(0, 0, 0, 0.08)",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", opacity: 0.8 }}>
+            <span
+              style={{
+                fontSize: 13,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.5px",
+                opacity: 0.8,
+              }}
+            >
               Backdrop Style:
             </span>
             <div style={{ display: "flex", gap: 6 }}>
@@ -574,9 +619,7 @@ export function App() {
                     cursor: "pointer",
                     fontWeight: bgTheme === key ? 600 : 400,
                     background:
-                      bgTheme === key
-                        ? "rgba(56, 189, 248, 0.35)"
-                        : "rgba(255, 255, 255, 0.08)",
+                      bgTheme === key ? "rgba(56, 189, 248, 0.35)" : "rgba(255, 255, 255, 0.08)",
                     color: "inherit",
                     transition: "all 0.15s ease",
                   }}
@@ -649,7 +692,14 @@ export function App() {
                   theme={theme}
                   style={{ padding: "38px 36px" }}
                 >
-                  <h1 style={{ fontSize: 34, marginBottom: 14, fontWeight: 800, letterSpacing: "-0.5px" }}>
+                  <h1
+                    style={{
+                      fontSize: 34,
+                      marginBottom: 14,
+                      fontWeight: 800,
+                      letterSpacing: "-0.5px",
+                    }}
+                  >
                     Physical Optical Glass in Pure Web Standards
                   </h1>
                   <p
@@ -671,7 +721,12 @@ export function App() {
                       preset="pill"
                       interactive
                       onClick={() => setActiveTab("lens")}
-                      style={{ padding: "12px 28px", color: "inherit", fontWeight: 600, cursor: "pointer" }}
+                      style={{
+                        padding: "12px 28px",
+                        color: "inherit",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                      }}
                     >
                       Explore Shaders ⚡
                     </LiquidGlassPanel>
@@ -680,7 +735,12 @@ export function App() {
                       preset={selectedPreset}
                       interactive
                       onClick={() => setActiveModal("docs")}
-                      style={{ padding: "12px 28px", color: "inherit", fontWeight: 600, cursor: "pointer" }}
+                      style={{
+                        padding: "12px 28px",
+                        color: "inherit",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                      }}
                     >
                       Documentation 📚
                     </LiquidGlassPanel>
@@ -702,7 +762,9 @@ export function App() {
                     style={{ padding: 24 }}
                   >
                     <div style={{ fontSize: 30, marginBottom: 10 }}>💎</div>
-                    <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 700 }}>Zero Overhead</h3>
+                    <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 700 }}>
+                      Zero Overhead
+                    </h3>
                     <p style={{ fontSize: 13.5, opacity: 0.8, lineHeight: 1.55 }}>
                       Pure CSS hardware acceleration and SVG meniscus filters for UI cards without
                       WebGL context exhaustion.
@@ -716,7 +778,9 @@ export function App() {
                     style={{ padding: 24 }}
                   >
                     <div style={{ fontSize: 30, marginBottom: 10 }}>🌈</div>
-                    <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 700 }}>RGB Dispersion</h3>
+                    <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 700 }}>
+                      RGB Dispersion
+                    </h3>
                     <p style={{ fontSize: 13.5, opacity: 0.8, lineHeight: 1.55 }}>
                       True chromatic fringe aberration splitting along normal vectors at curved
                       glass bevel rims.
@@ -732,8 +796,8 @@ export function App() {
                     <div style={{ fontSize: 30, marginBottom: 10 }}>⚡</div>
                     <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 700 }}>Any JS App</h3>
                     <p style={{ fontSize: 13.5, opacity: 0.8, lineHeight: 1.55 }}>
-                      Zero runtime dependencies for vanilla JS, Vue, Svelte, and a first-class
-                      React adapter export.
+                      Zero runtime dependencies for vanilla JS, Vue, Svelte, and a first-class React
+                      adapter export.
                     </p>
                   </LiquidGlassPanel>
                 </div>
@@ -854,129 +918,193 @@ export function App() {
                 }}
               >
                 {/* Presets */}
-              <div>
-                <label style={{ fontSize: 11, fontWeight: 700, opacity: 0.7, textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                  Curated Presets
-                </label>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, marginTop: 8 }}>
-                  {(Object.keys(GLASS_PRESETS) as GlassPresetKey[]).map((p) => (
+                <div>
+                  <label
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      opacity: 0.7,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    Curated Presets
+                  </label>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gap: 6,
+                      marginTop: 8,
+                    }}
+                  >
+                    {(Object.keys(GLASS_PRESETS) as GlassPresetKey[]).map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => handlePresetChange(p)}
+                        style={{
+                          padding: "6px 8px",
+                          borderRadius: 10,
+                          fontSize: 12,
+                          border: "none",
+                          cursor: "pointer",
+                          fontWeight: selectedPreset === p ? 600 : 400,
+                          background:
+                            selectedPreset === p
+                              ? "rgba(56, 189, 248, 0.35)"
+                              : "rgba(255,255,255,0.08)",
+                          color: "inherit",
+                          transition: "background 0.15s ease",
+                        }}
+                      >
+                        {p}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bevel Mode Toggle */}
+                <div>
+                  <label
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      opacity: 0.7,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    Bevel Geometry Mode
+                  </label>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: 6,
+                      marginTop: 6,
+                    }}
+                  >
                     <button
-                      key={p}
-                      onClick={() => handlePresetChange(p)}
+                      onClick={() => updateParam("bevelMode", 0)}
                       style={{
                         padding: "6px 8px",
                         borderRadius: 10,
                         fontSize: 12,
                         border: "none",
                         cursor: "pointer",
-                        fontWeight: selectedPreset === p ? 600 : 400,
                         background:
-                          selectedPreset === p
+                          config.bevelMode === 0
                             ? "rgba(56, 189, 248, 0.35)"
                             : "rgba(255,255,255,0.08)",
                         color: "inherit",
-                        transition: "background 0.15s ease",
                       }}
                     >
-                      {p}
+                      0: Biconvex Pill
                     </button>
+                    <button
+                      onClick={() => updateParam("bevelMode", 1)}
+                      style={{
+                        padding: "6px 8px",
+                        borderRadius: 10,
+                        fontSize: 12,
+                        border: "none",
+                        cursor: "pointer",
+                        background:
+                          config.bevelMode === 1
+                            ? "rgba(56, 189, 248, 0.35)"
+                            : "rgba(255,255,255,0.08)",
+                        color: "inherit",
+                      }}
+                    >
+                      1: Dome Magnifier
+                    </button>
+                  </div>
+                </div>
+
+                {/* All 16 Optical Sliders Grouped */}
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 14, paddingBottom: 24 }}
+                >
+                  {[
+                    // Refraction & Optics
+                    { label: "Blur Amount", key: "blurAmount", min: 0, max: 1, step: 0.01 },
+                    { label: "Refraction Strength", key: "refraction", min: 0, max: 2, step: 0.02 },
+                    {
+                      label: "Chromatic Aberration",
+                      key: "chromAberration",
+                      min: 0,
+                      max: 0.5,
+                      step: 0.01,
+                    },
+                    { label: "Surface Distortion", key: "distortion", min: 0, max: 1, step: 0.01 },
+
+                    // Lighting & Specular
+                    { label: "Edge Highlight", key: "edgeHighlight", min: 0, max: 2, step: 0.05 },
+                    { label: "Specular Glints", key: "specular", min: 0, max: 1, step: 0.05 },
+                    { label: "Fresnel Falloff", key: "fresnel", min: 0, max: 2, step: 0.05 },
+
+                    // Geometry & Bevel
+                    { label: "Corner Radius", key: "cornerRadius", min: 0, max: 100, step: 1 },
+                    { label: "Bevel Depth (zRadius)", key: "zRadius", min: 0, max: 100, step: 1 },
+                    { label: "Panel Opacity", key: "opacity", min: 0, max: 1, step: 0.02 },
+
+                    // Color & Exposure
+                    { label: "Color Saturation", key: "saturation", min: -1, max: 1, step: 0.05 },
+                    {
+                      label: "Optical Tint Strength",
+                      key: "tintStrength",
+                      min: 0,
+                      max: 1,
+                      step: 0.02,
+                    },
+                    {
+                      label: "Exposure / Brightness",
+                      key: "brightness",
+                      min: -0.5,
+                      max: 0.5,
+                      step: 0.02,
+                    },
+
+                    // Shadow System
+                    { label: "Shadow Spread", key: "shadowSpread", min: 0, max: 50, step: 1 },
+                    { label: "Shadow Opacity", key: "shadowOpacity", min: 0, max: 1, step: 0.02 },
+                    { label: "Shadow Offset Y", key: "shadowOffsetY", min: -10, max: 30, step: 1 },
+                  ].map(({ label, key, min, max, step }) => (
+                    <div key={key}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: 12.5,
+                          marginBottom: 4,
+                        }}
+                      >
+                        <span style={{ opacity: 0.9 }}>{label}</span>
+                        <span style={{ opacity: 0.6, fontFamily: "monospace" }}>
+                          {typeof (config as any)[key] === "number"
+                            ? ((config as any)[key] as number).toFixed(step < 1 ? 2 : 0)
+                            : (config as any)[key]}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={min}
+                        max={max}
+                        step={step}
+                        value={(config as any)[key]}
+                        onChange={(e) =>
+                          updateParam(key as keyof GlassConfig, parseFloat(e.target.value))
+                        }
+                        style={{
+                          width: "100%",
+                          accentColor: "#38bdf8",
+                          cursor: "pointer",
+                          height: 4,
+                        }}
+                      />
+                    </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Bevel Mode Toggle */}
-              <div>
-                <label style={{ fontSize: 11, fontWeight: 700, opacity: 0.7, textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                  Bevel Geometry Mode
-                </label>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: 6 }}>
-                  <button
-                    onClick={() => updateParam("bevelMode", 0)}
-                    style={{
-                      padding: "6px 8px",
-                      borderRadius: 10,
-                      fontSize: 12,
-                      border: "none",
-                      cursor: "pointer",
-                      background:
-                        config.bevelMode === 0
-                          ? "rgba(56, 189, 248, 0.35)"
-                          : "rgba(255,255,255,0.08)",
-                      color: "inherit",
-                    }}
-                  >
-                    0: Biconvex Pill
-                  </button>
-                  <button
-                    onClick={() => updateParam("bevelMode", 1)}
-                    style={{
-                      padding: "6px 8px",
-                      borderRadius: 10,
-                      fontSize: 12,
-                      border: "none",
-                      cursor: "pointer",
-                      background:
-                        config.bevelMode === 1
-                          ? "rgba(56, 189, 248, 0.35)"
-                          : "rgba(255,255,255,0.08)",
-                      color: "inherit",
-                    }}
-                  >
-                    1: Dome Magnifier
-                  </button>
-                </div>
-              </div>
-
-              {/* All 16 Optical Sliders Grouped */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 14, paddingBottom: 24 }}>
-                {[
-                  // Refraction & Optics
-                  { label: "Blur Amount", key: "blurAmount", min: 0, max: 1, step: 0.01 },
-                  { label: "Refraction Strength", key: "refraction", min: 0, max: 2, step: 0.02 },
-                  { label: "Chromatic Aberration", key: "chromAberration", min: 0, max: 0.5, step: 0.01 },
-                  { label: "Surface Distortion", key: "distortion", min: 0, max: 1, step: 0.01 },
-
-                  // Lighting & Specular
-                  { label: "Edge Highlight", key: "edgeHighlight", min: 0, max: 2, step: 0.05 },
-                  { label: "Specular Glints", key: "specular", min: 0, max: 1, step: 0.05 },
-                  { label: "Fresnel Falloff", key: "fresnel", min: 0, max: 2, step: 0.05 },
-
-                  // Geometry & Bevel
-                  { label: "Corner Radius", key: "cornerRadius", min: 0, max: 100, step: 1 },
-                  { label: "Bevel Depth (zRadius)", key: "zRadius", min: 0, max: 100, step: 1 },
-                  { label: "Panel Opacity", key: "opacity", min: 0, max: 1, step: 0.02 },
-
-                  // Color & Exposure
-                  { label: "Color Saturation", key: "saturation", min: -1, max: 1, step: 0.05 },
-                  { label: "Optical Tint Strength", key: "tintStrength", min: 0, max: 1, step: 0.02 },
-                  { label: "Exposure / Brightness", key: "brightness", min: -0.5, max: 0.5, step: 0.02 },
-
-                  // Shadow System
-                  { label: "Shadow Spread", key: "shadowSpread", min: 0, max: 50, step: 1 },
-                  { label: "Shadow Opacity", key: "shadowOpacity", min: 0, max: 1, step: 0.02 },
-                  { label: "Shadow Offset Y", key: "shadowOffsetY", min: -10, max: 30, step: 1 },
-                ].map(({ label, key, min, max, step }) => (
-                  <div key={key}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, marginBottom: 4 }}>
-                      <span style={{ opacity: 0.9 }}>{label}</span>
-                      <span style={{ opacity: 0.6, fontFamily: "monospace" }}>
-                        {typeof (config as any)[key] === "number"
-                          ? ((config as any)[key] as number).toFixed(step < 1 ? 2 : 0)
-                          : (config as any)[key]}
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      min={min}
-                      max={max}
-                      step={step}
-                      value={(config as any)[key]}
-                      onChange={(e) => updateParam(key as keyof GlassConfig, parseFloat(e.target.value))}
-                      style={{ width: "100%", accentColor: "#38bdf8", cursor: "pointer", height: 4 }}
-                    />
-                  </div>
-                ))}
-              </div>
               </div>
             </LiquidGlassPanel>
           </div>
@@ -1034,12 +1162,12 @@ export function App() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ fontSize: 28 }}>
-                  {activeModal === "quickstart" ? "🚀" : "📚"}
-                </span>
+                <span style={{ fontSize: 28 }}>{activeModal === "quickstart" ? "🚀" : "📚"}</span>
                 <div>
                   <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>
-                    {activeModal === "quickstart" ? "Getting Started with liquid-glass-fx" : "Documentation & API Reference"}
+                    {activeModal === "quickstart"
+                      ? "Getting Started with liquid-glass-fx"
+                      : "Documentation & API Reference"}
                   </h2>
                   <p style={{ fontSize: 12.5, opacity: 0.7, margin: "3px 0 0" }}>
                     Physical optical glass in pure web standards (zero runtime dependencies)
@@ -1077,67 +1205,82 @@ export function App() {
                 padding: "24px 28px 28px",
               }}
             >
-
-            {/* Quickstart Tab Content */}
-            {activeModal === "quickstart" && (
-              <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-                {/* 1. Install Box */}
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", opacity: 0.7 }}>
-                    1. Package Installation
-                  </label>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      background: "rgba(0,0,0,0.35)",
-                      padding: "12px 18px",
-                      borderRadius: 12,
-                      border: "1px solid rgba(255,255,255,0.12)",
-                      marginTop: 8,
-                      fontFamily: "monospace",
-                      fontSize: 14,
-                    }}
-                  >
-                    <span>npm install liquid-glass-fx</span>
-                    <button
-                      onClick={copyInstallCommand}
+              {/* Quickstart Tab Content */}
+              {activeModal === "quickstart" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                  {/* 1. Install Box */}
+                  <div>
+                    <label
                       style={{
-                        background: copied ? "#10b981" : "rgba(56, 189, 248, 0.25)",
-                        border: "1px solid rgba(56, 189, 248, 0.4)",
-                        color: "inherit",
-                        borderRadius: 8,
-                        padding: "6px 12px",
-                        fontSize: 12,
-                        cursor: "pointer",
-                        fontWeight: 600,
+                        fontSize: 11,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        opacity: 0.7,
                       }}
                     >
-                      {copied ? "✓ Copied!" : "Copy"}
-                    </button>
+                      1. Package Installation
+                    </label>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        background: "rgba(0,0,0,0.35)",
+                        padding: "12px 18px",
+                        borderRadius: 12,
+                        border: "1px solid rgba(255,255,255,0.12)",
+                        marginTop: 8,
+                        fontFamily: "monospace",
+                        fontSize: 14,
+                      }}
+                    >
+                      <span>npm install liquid-glass-fx</span>
+                      <button
+                        onClick={copyInstallCommand}
+                        style={{
+                          background: copied ? "#10b981" : "rgba(56, 189, 248, 0.25)",
+                          border: "1px solid rgba(56, 189, 248, 0.4)",
+                          color: "inherit",
+                          borderRadius: 8,
+                          padding: "6px 12px",
+                          fontSize: 12,
+                          cursor: "pointer",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {copied ? "✓ Copied!" : "Copy"}
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                {/* 2. React Example */}
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", opacity: 0.7 }}>
-                    2. React Component Usage
-                  </label>
-                  <pre
-                    style={{
-                      background: "rgba(0,0,0,0.35)",
-                      padding: "16px 20px",
-                      borderRadius: 14,
-                      border: "1px solid rgba(255,255,255,0.12)",
-                      fontFamily: "monospace",
-                      fontSize: 13,
-                      lineHeight: 1.6,
-                      marginTop: 8,
-                      overflowX: "auto",
-                    }}
-                  >
-{`import { LiquidGlassPanel, LiquidGlassLens } from "liquid-glass-fx/react";
+                  {/* 2. React Example */}
+                  <div>
+                    <label
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        opacity: 0.7,
+                      }}
+                    >
+                      2. React Component Usage
+                    </label>
+                    <pre
+                      style={{
+                        background: "rgba(0,0,0,0.35)",
+                        padding: "16px 20px",
+                        borderRadius: 14,
+                        border: "1px solid rgba(255,255,255,0.12)",
+                        fontFamily: "monospace",
+                        fontSize: 13,
+                        lineHeight: 1.6,
+                        marginTop: 8,
+                        overflowX: "auto",
+                      }}
+                    >
+                      {`import { LiquidGlassPanel, LiquidGlassLens } from "liquid-glass-fx/react";
 
 export function GlassHero() {
   return (
@@ -1152,200 +1295,308 @@ export function GlassHero() {
     </>
   );
 }`}
-                  </pre>
-                </div>
+                    </pre>
+                  </div>
 
-                {/* 3. Vanilla JS Example */}
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", opacity: 0.7 }}>
-                    3. Vanilla JS / Vue / Svelte Usage
-                  </label>
-                  <pre
-                    style={{
-                      background: "rgba(0,0,0,0.35)",
-                      padding: "16px 20px",
-                      borderRadius: 14,
-                      border: "1px solid rgba(255,255,255,0.12)",
-                      fontFamily: "monospace",
-                      fontSize: 13,
-                      lineHeight: 1.6,
-                      marginTop: 8,
-                      overflowX: "auto",
-                    }}
-                  >
-{`import { createLiquidGlassPanel, createLiquidGlassLens } from "liquid-glass-fx";
+                  {/* 3. Vanilla JS Example */}
+                  <div>
+                    <label
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        opacity: 0.7,
+                      }}
+                    >
+                      3. Vanilla JS / Vue / Svelte Usage
+                    </label>
+                    <pre
+                      style={{
+                        background: "rgba(0,0,0,0.35)",
+                        padding: "16px 20px",
+                        borderRadius: 14,
+                        border: "1px solid rgba(255,255,255,0.12)",
+                        fontFamily: "monospace",
+                        fontSize: 13,
+                        lineHeight: 1.6,
+                        marginTop: 8,
+                        overflowX: "auto",
+                      }}
+                    >
+                      {`import { createLiquidGlassPanel, createLiquidGlassLens } from "liquid-glass-fx";
 
 // Bind to any DOM element
 createLiquidGlassPanel(document.querySelector("#my-card"), { preset: "crystal" });
 createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`}
-                  </pre>
-                </div>
+                    </pre>
+                  </div>
 
-                {/* Modal Footer Actions */}
-                <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
-                  <button
-                    onClick={() => setActiveModal("docs")}
-                    style={{
-                      flex: 1,
-                      padding: "12px",
-                      borderRadius: 12,
-                      border: "none",
-                      background: "rgba(56, 189, 248, 0.35)",
-                      color: "inherit",
-                      fontWeight: 600,
-                      cursor: "pointer",
-                    }}
-                  >
-                    View Full API Reference 📚
-                  </button>
-                  <a
-                    href="https://github.com/davidpconqueror/liquid-glass-fx"
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      padding: "12px 20px",
-                      borderRadius: 12,
-                      border: "1px solid rgba(255,255,255,0.2)",
-                      background: "rgba(255,255,255,0.08)",
-                      color: "inherit",
-                      textDecoration: "none",
-                      fontWeight: 600,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                    }}
-                  >
-                    GitHub ↗
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Documentation Tab Content */}
-            {activeModal === "docs" && (
-              <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-                {/* Package Exports */}
-                <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Dual Package Exports</h3>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                    <div style={{ background: "rgba(0,0,0,0.3)", padding: "14px 16px", borderRadius: 12 }}>
-                      <strong style={{ fontSize: 13.5, color: "#38bdf8" }}>liquid-glass-fx (Core)</strong>
-                      <p style={{ fontSize: 12.5, opacity: 0.8, margin: "6px 0 0", lineHeight: 1.5 }}>
-                        Vanilla JS & CSS substrate (&lt; 8 KB, zero runtime dependencies). Exports <code>createLiquidGlassPanel</code>, <code>createLiquidGlassLens</code>, and presets.
-                      </p>
-                    </div>
-                    <div style={{ background: "rgba(0,0,0,0.3)", padding: "14px 16px", borderRadius: 12 }}>
-                      <strong style={{ fontSize: 13.5, color: "#38bdf8" }}>liquid-glass-fx/react</strong>
-                      <p style={{ fontSize: 12.5, opacity: 0.8, margin: "6px 0 0", lineHeight: 1.5 }}>
-                        First-class React 18 & 19 components with full TypeScript declarations: <code>&lt;LiquidGlassPanel /&gt;</code> and <code>&lt;LiquidGlassLens /&gt;</code>.
-                      </p>
-                    </div>
+                  {/* Modal Footer Actions */}
+                  <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+                    <button
+                      onClick={() => setActiveModal("docs")}
+                      style={{
+                        flex: 1,
+                        padding: "12px",
+                        borderRadius: 12,
+                        border: "none",
+                        background: "rgba(56, 189, 248, 0.35)",
+                        color: "inherit",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                      }}
+                    >
+                      View Full API Reference 📚
+                    </button>
+                    <a
+                      href="https://github.com/davidpconqueror/liquid-glass-fx"
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        padding: "12px 20px",
+                        borderRadius: 12,
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        background: "rgba(255,255,255,0.08)",
+                        color: "inherit",
+                        textDecoration: "none",
+                        fontWeight: 600,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                      }}
+                    >
+                      GitHub ↗
+                    </a>
                   </div>
                 </div>
+              )}
 
-                {/* 6 Curated Presets */}
-                <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>6 Curated Optical Presets</h3>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
-                    {[
-                      { name: "default", desc: "Balanced everyday frosted glass for UI layouts" },
-                      { name: "crystal", desc: "Ultra-sharp biconvex glass with chromatic rim" },
-                      { name: "frosted", desc: "Heavy Gaussian diffusion with low specular" },
-                      { name: "obsidian", desc: "High-contrast dark smoky optical glass" },
-                      { name: "pill", desc: "Fully rounded pill button meniscus" },
-                      { name: "magnifier", desc: "High-magnification Dome lens mode" },
-                    ].map((p) => (
-                      <div key={p.name} style={{ background: "rgba(0,0,0,0.3)", padding: "12px 14px", borderRadius: 10 }}>
-                        <strong style={{ fontSize: 13, textTransform: "capitalize" }}>{p.name}</strong>
-                        <p style={{ fontSize: 11.5, opacity: 0.75, margin: "4px 0 0" }}>{p.desc}</p>
+              {/* Documentation Tab Content */}
+              {activeModal === "docs" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                  {/* Package Exports */}
+                  <div>
+                    <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
+                      Dual Package Exports
+                    </h3>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                      <div
+                        style={{
+                          background: "rgba(0,0,0,0.3)",
+                          padding: "14px 16px",
+                          borderRadius: 12,
+                        }}
+                      >
+                        <strong style={{ fontSize: 13.5, color: "#38bdf8" }}>
+                          liquid-glass-fx (Core)
+                        </strong>
+                        <p
+                          style={{
+                            fontSize: 12.5,
+                            opacity: 0.8,
+                            margin: "6px 0 0",
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          Vanilla JS & CSS substrate (&lt; 8 KB, zero runtime dependencies). Exports{" "}
+                          <code>createLiquidGlassPanel</code>, <code>createLiquidGlassLens</code>,
+                          and presets.
+                        </p>
                       </div>
-                    ))}
+                      <div
+                        style={{
+                          background: "rgba(0,0,0,0.3)",
+                          padding: "14px 16px",
+                          borderRadius: 12,
+                        }}
+                      >
+                        <strong style={{ fontSize: 13.5, color: "#38bdf8" }}>
+                          liquid-glass-fx/react
+                        </strong>
+                        <p
+                          style={{
+                            fontSize: 12.5,
+                            opacity: 0.8,
+                            margin: "6px 0 0",
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          First-class React 18 & 19 components with full TypeScript declarations:{" "}
+                          <code>&lt;LiquidGlassPanel /&gt;</code> and{" "}
+                          <code>&lt;LiquidGlassLens /&gt;</code>.
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                {/* The 16 Parameters Summary */}
-                <div>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Optical Parameter Reference</h3>
-                  <div
-                    style={{
-                      maxHeight: 220,
-                      overflowY: "auto",
-                      borderRadius: 12,
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      background: "rgba(0,0,0,0.3)",
-                    }}
-                  >
-                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, textAlign: "left" }}>
-                      <thead>
-                        <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.1)", opacity: 0.7 }}>
-                          <th style={{ padding: "8px 12px" }}>Parameter</th>
-                          <th style={{ padding: "8px 12px" }}>Range</th>
-                          <th style={{ padding: "8px 12px" }}>Effect</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {[
-                          { p: "blurAmount", r: "0.0 - 1.0", d: "Frosted Gaussian blur radius" },
-                          { p: "refraction", r: "0.0 - 2.0", d: "Snell's law ray deflection strength" },
-                          { p: "chromAberration", r: "0.0 - 0.2", d: "RGB prismatic splitting at rim" },
-                          { p: "edgeHighlight", r: "0.0 - 2.0", d: "Meniscus crest specular highlight" },
-                          { p: "specular", r: "0.0 - 1.0", d: "2-light Blinn-Phong studio glints" },
-                          { p: "fresnel", r: "0.0 - 2.0", d: "Grazing angle reflection falloff" },
-                          { p: "zRadius", r: "2 - 80px", d: "Bevel heightfield depth" },
-                          { p: "bevelMode", r: "0 or 1", d: "0: Biconvex Pill | 1: Dome Magnifier" },
-                          { p: "distortion", r: "0.0 - 1.0", d: "Micro-surface liquid noise" },
-                          { p: "cornerRadius", r: "0 - 9999px", d: "SDF rounded-rectangle radius" },
-                        ].map((row) => (
-                          <tr key={row.p} style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                            <td style={{ padding: "6px 12px", fontFamily: "monospace", color: "#38bdf8" }}>{row.p}</td>
-                            <td style={{ padding: "6px 12px", opacity: 0.75 }}>{row.r}</td>
-                            <td style={{ padding: "6px 12px", opacity: 0.85 }}>{row.d}</td>
+                  {/* 6 Curated Presets */}
+                  <div>
+                    <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
+                      6 Curated Optical Presets
+                    </h3>
+                    <div
+                      style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}
+                    >
+                      {[
+                        { name: "default", desc: "Balanced everyday frosted glass for UI layouts" },
+                        { name: "crystal", desc: "Ultra-sharp biconvex glass with chromatic rim" },
+                        { name: "frosted", desc: "Heavy Gaussian diffusion with low specular" },
+                        { name: "obsidian", desc: "High-contrast dark smoky optical glass" },
+                        { name: "pill", desc: "Fully rounded pill button meniscus" },
+                        { name: "magnifier", desc: "High-magnification Dome lens mode" },
+                      ].map((p) => (
+                        <div
+                          key={p.name}
+                          style={{
+                            background: "rgba(0,0,0,0.3)",
+                            padding: "12px 14px",
+                            borderRadius: 10,
+                          }}
+                        >
+                          <strong style={{ fontSize: 13, textTransform: "capitalize" }}>
+                            {p.name}
+                          </strong>
+                          <p style={{ fontSize: 11.5, opacity: 0.75, margin: "4px 0 0" }}>
+                            {p.desc}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* The 16 Parameters Summary */}
+                  <div>
+                    <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
+                      Optical Parameter Reference
+                    </h3>
+                    <div
+                      style={{
+                        maxHeight: 220,
+                        overflowY: "auto",
+                        borderRadius: 12,
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        background: "rgba(0,0,0,0.3)",
+                      }}
+                    >
+                      <table
+                        style={{
+                          width: "100%",
+                          borderCollapse: "collapse",
+                          fontSize: 12,
+                          textAlign: "left",
+                        }}
+                      >
+                        <thead>
+                          <tr
+                            style={{
+                              borderBottom: "1px solid rgba(255,255,255,0.1)",
+                              opacity: 0.7,
+                            }}
+                          >
+                            <th style={{ padding: "8px 12px" }}>Parameter</th>
+                            <th style={{ padding: "8px 12px" }}>Range</th>
+                            <th style={{ padding: "8px 12px" }}>Effect</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {[
+                            { p: "blurAmount", r: "0.0 - 1.0", d: "Frosted Gaussian blur radius" },
+                            {
+                              p: "refraction",
+                              r: "0.0 - 2.0",
+                              d: "Snell's law ray deflection strength",
+                            },
+                            {
+                              p: "chromAberration",
+                              r: "0.0 - 0.2",
+                              d: "RGB prismatic splitting at rim",
+                            },
+                            {
+                              p: "edgeHighlight",
+                              r: "0.0 - 2.0",
+                              d: "Meniscus crest specular highlight",
+                            },
+                            {
+                              p: "specular",
+                              r: "0.0 - 1.0",
+                              d: "2-light Blinn-Phong studio glints",
+                            },
+                            { p: "fresnel", r: "0.0 - 2.0", d: "Grazing angle reflection falloff" },
+                            { p: "zRadius", r: "2 - 80px", d: "Bevel heightfield depth" },
+                            {
+                              p: "bevelMode",
+                              r: "0 or 1",
+                              d: "0: Biconvex Pill | 1: Dome Magnifier",
+                            },
+                            { p: "distortion", r: "0.0 - 1.0", d: "Micro-surface liquid noise" },
+                            {
+                              p: "cornerRadius",
+                              r: "0 - 9999px",
+                              d: "SDF rounded-rectangle radius",
+                            },
+                          ].map((row) => (
+                            <tr
+                              key={row.p}
+                              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+                            >
+                              <td
+                                style={{
+                                  padding: "6px 12px",
+                                  fontFamily: "monospace",
+                                  color: "#38bdf8",
+                                }}
+                              >
+                                {row.p}
+                              </td>
+                              <td style={{ padding: "6px 12px", opacity: 0.75 }}>{row.r}</td>
+                              <td style={{ padding: "6px 12px", opacity: 0.85 }}>{row.d}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Modal Footer Actions */}
+                  <div style={{ display: "flex", gap: 12, marginTop: 4 }}>
+                    <button
+                      onClick={() => setActiveModal("quickstart")}
+                      style={{
+                        flex: 1,
+                        padding: "12px",
+                        borderRadius: 12,
+                        border: "none",
+                        background: "rgba(56, 189, 248, 0.35)",
+                        color: "inherit",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Quick Start & Installation 🚀
+                    </button>
+                    <a
+                      href="https://github.com/davidpconqueror/liquid-glass-fx"
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        padding: "12px 24px",
+                        borderRadius: 12,
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        background: "rgba(255,255,255,0.08)",
+                        color: "inherit",
+                        textDecoration: "none",
+                        fontWeight: 600,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                      }}
+                    >
+                      View on GitHub ↗
+                    </a>
                   </div>
                 </div>
-
-                {/* Modal Footer Actions */}
-                <div style={{ display: "flex", gap: 12, marginTop: 4 }}>
-                  <button
-                    onClick={() => setActiveModal("quickstart")}
-                    style={{
-                      flex: 1,
-                      padding: "12px",
-                      borderRadius: 12,
-                      border: "none",
-                      background: "rgba(56, 189, 248, 0.35)",
-                      color: "inherit",
-                      fontWeight: 600,
-                      cursor: "pointer",
-                    }}
-                  >
-                    Quick Start & Installation 🚀
-                  </button>
-                  <a
-                    href="https://github.com/davidpconqueror/liquid-glass-fx"
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      padding: "12px 24px",
-                      borderRadius: 12,
-                      border: "1px solid rgba(255,255,255,0.2)",
-                      background: "rgba(255,255,255,0.08)",
-                      color: "inherit",
-                      textDecoration: "none",
-                      fontWeight: 600,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                    }}
-                  >
-                    View on GitHub ↗
-                  </a>
-                </div>
-              </div>
-            )}
+              )}
             </div>
           </LiquidGlassPanel>
         </div>

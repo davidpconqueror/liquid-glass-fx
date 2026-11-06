@@ -18,10 +18,10 @@ export interface LiquidGlassPanelProps<T extends React.ElementType = "div"> {
 
 export type PolymorphicLiquidGlassPanelProps<T extends React.ElementType> =
   LiquidGlassPanelProps<T> &
-  Omit<React.ComponentPropsWithoutRef<T>, keyof LiquidGlassPanelProps<T>>;
+    Omit<React.ComponentPropsWithoutRef<T>, keyof LiquidGlassPanelProps<T>>;
 
 export const LiquidGlassPanel = React.forwardRef(function LiquidGlassPanel<
-  T extends React.ElementType = "div"
+  T extends React.ElementType = "div",
 >(
   {
     as,
@@ -40,10 +40,7 @@ export const LiquidGlassPanel = React.forwardRef(function LiquidGlassPanel<
   const Component = as || "div";
   const internalRef = React.useRef<HTMLElement | null>(null);
 
-  const activeConfig = React.useMemo(
-    () => resolveGlassConfig(preset, config),
-    [preset, config]
-  );
+  const activeConfig = React.useMemo(() => resolveGlassConfig(preset, config), [preset, config]);
 
   const ssrStyle = React.useMemo(() => {
     return computeGlassStyle(activeConfig, theme);
@@ -99,4 +96,3 @@ export const LiquidGlassPanel = React.forwardRef(function LiquidGlassPanel<
 }) as <T extends React.ElementType = "div">(
   props: PolymorphicLiquidGlassPanelProps<T> & { ref?: React.ForwardedRef<any> }
 ) => React.ReactElement | null;
-

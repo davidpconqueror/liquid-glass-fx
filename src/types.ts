@@ -20,13 +20,7 @@ export interface GlassConfig {
   button?: boolean;
 }
 
-export type GlassPresetKey =
-  | "default"
-  | "crystal"
-  | "frosted"
-  | "obsidian"
-  | "pill"
-  | "magnifier";
+export type GlassPresetKey = "default" | "crystal" | "frosted" | "obsidian" | "pill" | "magnifier";
 
 export interface PresetStyleDefinition {
   substrateLight: string;
@@ -46,11 +40,7 @@ export interface LiquidGlassPanelHandle {
   destroy: () => void;
 }
 
-export type BackgroundSource =
-  | string
-  | HTMLCanvasElement
-  | HTMLImageElement
-  | HTMLVideoElement;
+export type BackgroundSource = string | HTMLCanvasElement | HTMLImageElement | HTMLVideoElement;
 
 export interface LensOptions {
   preset?: GlassPresetKey;
@@ -68,4 +58,3 @@ export interface LiquidGlassLensHandle {
   update: (newOptions: Partial<LensOptions>) => void;
   destroy: () => void;
 }
-

@@ -22,4 +22,3 @@
   "include": ["src/**/*", "tests/**/*", "playground/**/*"],
   "exclude": ["node_modules", "dist"]
 }
-

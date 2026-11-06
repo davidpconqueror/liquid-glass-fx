@@ -70,7 +70,12 @@ export function createLiquidGlassLens(
           bgW = selected instanceof HTMLCanvasElement ? selected.width : selected.naturalWidth;
           bgH = selected instanceof HTMLCanvasElement ? selected.height : selected.naturalHeight;
         } else {
-          bgTexture = await resolveBackgroundTexture(currentOptions.background, targetW, targetH, isDark);
+          bgTexture = await resolveBackgroundTexture(
+            currentOptions.background,
+            targetW,
+            targetH,
+            isDark
+          );
           bgW = bgTexture instanceof HTMLCanvasElement ? bgTexture.width : targetW;
           bgH = bgTexture instanceof HTMLCanvasElement ? bgTexture.height : targetH;
         }
@@ -138,9 +143,8 @@ export function createLiquidGlassLens(
 
   // Listeners
   window.addEventListener("scroll", scheduleRender, { passive: true });
-  const resizeObserver = typeof ResizeObserver !== "undefined"
-    ? new ResizeObserver(() => scheduleRender())
-    : null;
+  const resizeObserver =
+    typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => scheduleRender()) : null;
 
   if (resizeObserver) {
     resizeObserver.observe(container);
@@ -196,4 +200,3 @@ export function createLiquidGlassLens(
     },
   };
 }
-

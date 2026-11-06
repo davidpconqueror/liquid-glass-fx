@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { DEFAULT_GLASS_CONFIG, resolveGlassConfig } from "../src/config";
 import { GLASS_PRESETS } from "../src/presets";
-import type { GlassConfig, GlassPresetKey } from "../src/types";
+import type { GlassPresetKey } from "../src/types";
 
 describe("Optical Configuration & Presets", () => {
   it("should provide exact DEFAULT_GLASS_CONFIG with all 16 parameters", () => {
@@ -105,4 +105,3 @@ describe("Optical Configuration & Presets", () => {
     expect(resolved.blurAmount).toBe(DEFAULT_GLASS_CONFIG.blurAmount);
   });
 });
-

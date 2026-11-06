@@ -43,4 +43,3 @@ describe("Background Sampler", () => {
     expect(checker instanceof HTMLCanvasElement).toBe(true);
   });
 });
-

@@ -73,15 +73,7 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
           onPositionChange,
         });
       }
-    }, [
-      preset,
-      config,
-      background,
-      backgroundSelector,
-      draggable,
-      floating,
-      onPositionChange,
-    ]);
+    }, [preset, config, background, backgroundSelector, draggable, floating, onPositionChange]);
 
     const setRefs = React.useCallback(
       (node: HTMLDivElement | null) => {
@@ -114,4 +106,3 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
     );
   }
 );
-

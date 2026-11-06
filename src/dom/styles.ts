@@ -57,8 +57,8 @@ export function computeGlassStyle(
     // 6. Chromatic Dispersion Rim (cyan & magenta prismatic splitting driven by refraction)
     ...(chromaScale > 0.05
       ? [
-          `inset ${(Math.max(1, 1.5 * refrScale)).toFixed(1)}px 0 1px rgba(56, 189, 248, ${(0.22 * chromaScale * Math.min(1.5, Math.max(0.4, refrScale))).toFixed(3)})`,
-          `inset -${(Math.max(1, 1.5 * refrScale)).toFixed(1)}px 0 1px rgba(244, 63, 94, ${(0.18 * chromaScale * Math.min(1.5, Math.max(0.4, refrScale))).toFixed(3)})`,
+          `inset ${Math.max(1, 1.5 * refrScale).toFixed(1)}px 0 1px rgba(56, 189, 248, ${(0.22 * chromaScale * Math.min(1.5, Math.max(0.4, refrScale))).toFixed(3)})`,
+          `inset -${Math.max(1, 1.5 * refrScale).toFixed(1)}px 0 1px rgba(244, 63, 94, ${(0.18 * chromaScale * Math.min(1.5, Math.max(0.4, refrScale))).toFixed(3)})`,
         ]
       : []),
   ].join(", ");
@@ -88,4 +88,3 @@ export function computeGlassStyle(
 
   return styles;
 }
-
