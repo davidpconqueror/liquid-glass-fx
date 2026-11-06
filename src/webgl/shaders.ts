@@ -60,7 +60,10 @@ varying vec2 v_screenUV;
 
 void main() {
   v_localPx = a_pos * u_size;
-  vec2 stagePx = u_scroll + (a_pos + 0.5) * u_size;
+  vec2 stagePx = vec2(
+    u_scroll.x + (a_pos.x + 0.5) * u_size.x,
+    u_scroll.y + (0.5 - a_pos.y) * u_size.y
+  );
   v_screenUV = vec2(stagePx.x / max(u_res.x, 1.0), 1.0 - stagePx.y / max(u_res.y, 1.0));
   gl_Position = vec4(a_pos * 2.0, 0.0, 1.0);
 }
@@ -120,7 +123,7 @@ void main() {
   // Drop Shadow / Outside boundary
   if (sdf > 0.5) {
     if (u_pad > 0.5) {
-      float sdfShadow = rrSDF(v_localPx - vec2(0.0, u_shadowOffY), half_, r);
+      float sdfShadow = rrSDF(v_localPx + vec2(0.0, u_shadowOffY), half_, r);
       float d = max(sdfShadow - 1.0, 0.0);
       float spread = max(u_shadowSpread, 1.0);
       float falloff = 1.0 / (spread * spread);
@@ -149,7 +152,7 @@ void main() {
   float dR = -rrSDF(v_localPx + vec2(e, 0.0), half_, r);
   float dL = -rrSDF(v_localPx - vec2(e, 0.0), half_, r);
   float dU = -rrSDF(v_localPx + vec2(0.0, e), half_, r);
-  float dD = -rrSDF(v_localPx - vec2(e, 0.0), half_, r);
+  float dD = -rrSDF(v_localPx - vec2(0.0, e), half_, r);
   float hC = bevelHeight(dC, bW);
   float hR = bevelHeight(dR, bW);
   float hL = bevelHeight(dL, bW);
@@ -161,7 +164,7 @@ void main() {
   float depth = smoothstep(0.0, bW, inside);
 
   // Dual-surface Snell's law refraction approximation
-  vec2 pxToUV = vec2(1.0, -1.0) / max(u_res, vec2(1.0));
+  vec2 pxToUV = vec2(1.0, 1.0) / max(u_res, vec2(1.0));
   float ior = 1.5;
   float refrPow = 1.0 - 1.0 / ior;
   vec2 refrPx;
