@@ -105,3 +105,4 @@ describe("Optical Configuration & Presets", () => {
     expect(resolved.blurAmount).toBe(DEFAULT_GLASS_CONFIG.blurAmount);
   });
 });
+

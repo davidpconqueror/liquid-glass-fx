@@ -99,3 +99,4 @@ export const LiquidGlassPanel = React.forwardRef(function LiquidGlassPanel<
 }) as <T extends React.ElementType = "div">(
   props: PolymorphicLiquidGlassPanelProps<T> & { ref?: React.ForwardedRef<any> }
 ) => React.ReactElement | null;
+

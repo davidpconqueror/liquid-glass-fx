@@ -53,3 +53,4 @@ describe("CSS Style Generator", () => {
     expect(darkStyle.backgroundColor).toContain("15, 23, 42");
   });
 });
+

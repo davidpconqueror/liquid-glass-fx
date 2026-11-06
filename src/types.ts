@@ -68,3 +68,4 @@ export interface LiquidGlassLensHandle {
   update: (newOptions: Partial<LensOptions>) => void;
   destroy: () => void;
 }
+

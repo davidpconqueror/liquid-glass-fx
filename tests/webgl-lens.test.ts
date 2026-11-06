@@ -42,3 +42,4 @@ describe("Vanilla WebGL Lens Engine", () => {
     handle.destroy();
   });
 });
+

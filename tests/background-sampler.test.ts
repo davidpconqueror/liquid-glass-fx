@@ -37,3 +37,4 @@ describe("Background Sampler", () => {
     expect(texture instanceof HTMLCanvasElement).toBe(true);
   });
 });
+

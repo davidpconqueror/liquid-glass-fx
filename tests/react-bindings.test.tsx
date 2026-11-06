@@ -87,3 +87,4 @@ describe("React Bindings", () => {
     expect(screen.getByTestId("is-dragging").textContent).toBe("no");
   });
 });
+

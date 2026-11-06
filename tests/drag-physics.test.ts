@@ -53,3 +53,4 @@ describe("Drag Physics Controller", () => {
     expect(controller.getPosition()).toEqual({ x: 250, y: 350 });
   });
 });
+

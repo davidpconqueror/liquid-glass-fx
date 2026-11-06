@@ -62,3 +62,4 @@ export function resolveGlassConfig(
     button: Boolean(merged.button),
   };
 }
+

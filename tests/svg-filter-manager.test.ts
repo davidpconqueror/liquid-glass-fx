@@ -27,3 +27,4 @@ describe("SVG Filter Manager", () => {
     expect(elements.length).toBe(1);
   });
 });
+
