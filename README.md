@@ -4,10 +4,10 @@
 >
 > Deliver authentic optical glass refraction, dynamic Gaussian blur, RGB chromatic aberration, and studio Blinn-Phong specular glints using a high-performance **Dual-Engine Architecture** (pure CSS/SVG substrate for UI components and GLSL ES 1.0 shaders for interactive lenses).
 
-[![npm version](https://img.shields.io/badge/npm-v0.1.0-blue.svg)](https://www.npmjs.com/package/liquid-glass-fx)
+[![npm version](https://img.shields.io/badge/npm-v0.1.1-blue.svg)](https://www.npmjs.com/package/liquid-glass-fx)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![bundle size](https://img.shields.io/badge/dependencies-0-success.svg)](package.json)
-[![tests](https://img.shields.io/badge/tests-29%20passing-brightgreen.svg)](tests/)
+[![tests](https://img.shields.io/badge/tests-32%20passing-brightgreen.svg)](tests/)
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "liquid-glass-fx",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "High-performance liquid glass effect library with WebGL refraction, chromatic dispersion, and physical specular rim highlights.",
   "type": "module",
   "main": "./dist/index.cjs",

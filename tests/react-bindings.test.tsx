@@ -9,7 +9,17 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 describe("React Bindings", () => {
   let container: HTMLDivElement;
 
+  let container: HTMLDivElement;
+
   beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    if (container.parentNode === document.body) {
+      document.body.removeChild(container);
+    }
     container = document.createElement("div");
     document.body.appendChild(container);
   });
@@ -20,6 +30,7 @@ describe("React Bindings", () => {
     }
   });
 
+  it("should render LiquidGlassPanel with children, custom props, and forwarded ref", async () => {
   it("should render LiquidGlassPanel with children, custom props, and forwarded ref", async () => {
     const ref = React.createRef<HTMLDivElement>();
     const root = createRoot(container);
@@ -36,7 +47,22 @@ describe("React Bindings", () => {
         </LiquidGlassPanel>
       );
     });
+    const root = createRoot(container);
+    await act(async () => {
+      root.render(
+        <LiquidGlassPanel
+          ref={ref}
+          as="div"
+          preset="crystal"
+          className="custom-glass-card"
+          data-testid="panel"
+        >
+          <span>Card Content</span>
+        </LiquidGlassPanel>
+      );
+    });
 
+    const panel = container.querySelector('[data-testid="panel"]') as HTMLElement;
     const panel = container.querySelector('[data-testid="panel"]') as HTMLElement;
     expect(panel).toBeDefined();
     expect(panel.textContent).toBe("Card Content");
@@ -44,6 +70,10 @@ describe("React Bindings", () => {
     expect(panel.getAttribute("data-liquid-glass")).toBe("true");
     expect(panel.getAttribute("data-preset")).toBe("crystal");
     expect(ref.current).toBe(panel);
+
+    await act(async () => {
+      root.unmount();
+    });
 
     await act(async () => {
       root.unmount();
@@ -59,7 +89,17 @@ describe("React Bindings", () => {
         </LiquidGlassPanel>
       );
     });
+  it("should support polymorphic 'as' prop on LiquidGlassPanel", async () => {
+    const root = createRoot(container);
+    await act(async () => {
+      root.render(
+        <LiquidGlassPanel as="button" preset="pill" data-testid="button-panel">
+          Click Me
+        </LiquidGlassPanel>
+      );
+    });
 
+    const btn = container.querySelector('[data-testid="button-panel"]') as HTMLElement;
     const btn = container.querySelector('[data-testid="button-panel"]') as HTMLElement;
     expect(btn.tagName.toLowerCase()).toBe("button");
     expect(btn.getAttribute("type")).toBe("button");
@@ -67,8 +107,13 @@ describe("React Bindings", () => {
     await act(async () => {
       root.unmount();
     });
+
+    await act(async () => {
+      root.unmount();
+    });
   });
 
+  it("should mount and unmount LiquidGlassLens cleanly with ref", async () => {
   it("should mount and unmount LiquidGlassLens cleanly with ref", async () => {
     const ref = React.createRef<HTMLDivElement>();
     const root = createRoot(container);
@@ -79,10 +124,14 @@ describe("React Bindings", () => {
     });
 
     const lens = container.querySelector('[data-testid="lens"]') as HTMLElement;
+    const lens = container.querySelector('[data-testid="lens"]') as HTMLElement;
     expect(lens).toBeDefined();
     expect(ref.current).toBe(lens);
     expect(lens.querySelector("canvas")).not.toBeNull();
 
+    await act(async () => {
+      root.unmount();
+    });
     await act(async () => {
       root.unmount();
     });
@@ -99,12 +148,33 @@ describe("React Bindings", () => {
         />
       );
     });
+  it("should update LiquidGlassLens options without remounting or replacing the canvas element", async () => {
+    const root = createRoot(container);
+    await act(async () => {
+      root.render(
+        <LiquidGlassLens
+          preset="magnifier"
+          config={{ refraction: 1.0 }}
+          data-testid="lens-update"
+        />
+      );
+    });
 
+    const lens = container.querySelector('[data-testid="lens-update"]') as HTMLElement;
     const lens = container.querySelector('[data-testid="lens-update"]') as HTMLElement;
     const initialCanvas = lens.querySelector("canvas");
     expect(initialCanvas).not.toBeNull();
 
     // Rerender with new parameter
+    await act(async () => {
+      root.render(
+        <LiquidGlassLens
+          preset="magnifier"
+          config={{ refraction: 2.0 }}
+          data-testid="lens-update"
+        />
+      );
+    });
     await act(async () => {
       root.render(
         <LiquidGlassLens
@@ -121,8 +191,13 @@ describe("React Bindings", () => {
     await act(async () => {
       root.unmount();
     });
+
+    await act(async () => {
+      root.unmount();
+    });
   });
 
+  it("should provide useDragPhysics hook", async () => {
   it("should provide useDragPhysics hook", async () => {
     function TestComponent() {
       const { position, isDragging } = useDragPhysics({
@@ -137,6 +212,18 @@ describe("React Bindings", () => {
       );
     }
 
+    const root = createRoot(container);
+    await act(async () => {
+      root.render(<TestComponent />);
+    });
+
+    expect(container.querySelector('[data-testid="pos-x"]')?.textContent).toBe("50");
+    expect(container.querySelector('[data-testid="pos-y"]')?.textContent).toBe("75");
+    expect(container.querySelector('[data-testid="is-dragging"]')?.textContent).toBe("no");
+
+    await act(async () => {
+      root.unmount();
+    });
     const root = createRoot(container);
     await act(async () => {
       root.render(<TestComponent />);
