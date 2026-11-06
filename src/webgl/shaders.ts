@@ -64,7 +64,7 @@ void main() {
     u_scroll.x + (a_pos.x + 0.5) * u_size.x,
     u_scroll.y + (0.5 - a_pos.y) * u_size.y
   );
-  v_screenUV = vec2(stagePx.x / max(u_res.x, 1.0), 1.0 - stagePx.y / max(u_res.y, 1.0));
+  v_screenUV = vec2(stagePx.x / max(u_res.x, 1.0), stagePx.y / max(u_res.y, 1.0));
   gl_Position = vec4(a_pos * 2.0, 0.0, 1.0);
 }
 `;
@@ -171,13 +171,13 @@ void main() {
 
   if (u_bevelMode < 0.5) {
     // Mode 0: Biconvex pill lens
-    vec2 exitRefr = hGrad * refrPow;
+    vec2 exitRefr = vec2(hGrad.x, -hGrad.y) * refrPow;
     refrPx = exitRefr * u_refract * min(bW * 0.65, 10.0);
-    vec2 centerDir = -v_localPx / max(half_, vec2(1.0));
+    vec2 centerDir = vec2(-v_localPx.x, v_localPx.y) / max(half_, vec2(1.0));
     refrPx += centerDir * u_refract * 1.5 * (1.0 - depth);
   } else {
     // Mode 1: Dome magnifier
-    refrPx = -v_localPx * u_refract * depth * 0.25;
+    refrPx = vec2(-v_localPx.x, v_localPx.y) * u_refract * depth * 0.25;
   }
   vec2 refr = refrPx * pxToUV;
 
@@ -187,7 +187,7 @@ void main() {
 
   // Chromatic dispersion (RGB offset along surface normal)
   float caS = u_chroma * 8.0 * edge;
-  vec2 caD = N.xy * caS * pxToUV;
+  vec2 caD = vec2(N.x, -N.y) * caS * pxToUV;
   vec2 base = clamp(v_screenUV + refr + micro, 0.001, 0.999);
 
   vec3 sharp = vec3(

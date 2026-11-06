@@ -600,6 +600,7 @@ export function App() {
   const [lensScene, setLensScene] = useState<LensSceneKey>("pattern");
   const [customImage, setCustomImage] = useState<HTMLImageElement | null>(null);
   const [curatedPhoto, setCuratedPhoto] = useState<HTMLImageElement | null>(null);
+  const [lensPos, setLensPos] = useState({ x: 260, y: 150 });
   const stageCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -1011,7 +1012,7 @@ export function App() {
             alignItems: "center",
             justifyContent: "space-between",
             padding: "16px 28px",
-            marginBottom: 24,
+            marginBottom: 16,
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -1084,7 +1085,7 @@ export function App() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: 24,
+            marginBottom: 16,
             padding: "10px 18px",
             borderRadius: 18,
             background: theme === "dark" ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.04)",
@@ -1540,12 +1541,13 @@ export function App() {
 
                 {/* Draggable WebGL Lens (True Snell Refraction over the stage) */}
                 <LiquidGlassLens
-                  preset={selectedPreset === "magnifier" ? "magnifier" : "default"}
+                  preset={selectedPreset}
                   config={config}
                   backgroundSelector="#lens-stage-canvas"
                   background={`${bgTheme}-${theme}-${lensScene}-${customImage ? "cust" : ""}`}
                   draggable={true}
-                  initialPosition={{ x: 260, y: 150 }}
+                  initialPosition={lensPos}
+                  onPositionChange={setLensPos}
                   style={{
                     position: "absolute",
                     width: 240,
@@ -1558,10 +1560,10 @@ export function App() {
             )}
           </div>
 
-          {/* Controls Panel */}
+          {/* Controls Panel - Uniform 550px height matching the demo draggable stage */}
           <div
             style={{
-              height: 600,
+              height: 550,
               display: "flex",
               flexDirection: "column",
             }}
@@ -1570,7 +1572,7 @@ export function App() {
               preset="default"
               theme={theme}
               style={{
-                height: 600,
+                height: 550,
                 borderRadius: 24,
                 overflow: "hidden",
                 display: "flex",
@@ -1617,14 +1619,14 @@ export function App() {
                 </button>
               </div>
 
-              {/* Scrollable Sliders & Presets Area with Internal Glass Scrollbar */}
+              {/* Scrollable Sliders & Presets Area with Inset Glass Scrollbar */}
               <div
                 className="glass-scrollbar"
                 style={{
                   flex: 1,
                   overflowY: "auto",
                   overflowX: "hidden",
-                  padding: "16px 20px 24px",
+                  padding: "16px 18px 20px 20px",
                   display: "flex",
                   flexDirection: "column",
                   gap: 16,
@@ -1929,7 +1931,7 @@ export function App() {
                 flex: 1,
                 overflowY: "auto",
                 overflowX: "hidden",
-                padding: "24px 28px 28px",
+                padding: "20px 24px 24px 28px",
               }}
             >
               {/* Quickstart Tab Content */}

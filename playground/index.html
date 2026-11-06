@@ -21,14 +21,13 @@
         background: #f1f5f9;
         color: #0f172a;
       }
-      /* Clean custom scrollbars with track margins */
+      /* Clean custom scrollbars */
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
       }
       ::-webkit-scrollbar-track {
         background: transparent;
-        margin: 8px 0;
       }
       ::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.22);
@@ -43,12 +42,36 @@
       body.light ::-webkit-scrollbar-thumb:hover {
         background: rgba(14, 165, 233, 0.65);
       }
+
+      /* Inset Glass Scrollbar - safely constrained inside rounded cards */
       .glass-scrollbar {
         scrollbar-width: thin;
-        scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+        scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+      }
+      .glass-scrollbar::-webkit-scrollbar {
+        width: 5px;
+      }
+      .glass-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+        margin: 14px 0;
+        border-radius: 9999px;
+      }
+      .glass-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.24);
+        border-radius: 9999px;
+      }
+      .glass-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(56, 189, 248, 0.65);
       }
       body.light .glass-scrollbar {
-        scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
+        scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+      }
+      body.light .glass-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.24);
+        border-radius: 9999px;
+      }
+      body.light .glass-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(14, 165, 233, 0.7);
       }
       @keyframes floatOrb1 {
         0%,
