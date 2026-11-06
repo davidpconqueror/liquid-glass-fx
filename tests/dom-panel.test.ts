@@ -69,4 +69,16 @@ describe("Vanilla DOM Panel Engine", () => {
 
     handle.destroy();
   });
+
+  it("should respect user-specified overflow and not clobber it", () => {
+    container.style.overflowY = "auto";
+    const handle = createLiquidGlassPanel(container, {
+      preset: "default",
+    });
+
+    expect(container.style.overflowY).toBe("auto");
+    expect(container.style.overflow).not.toBe("hidden");
+
+    handle.destroy();
+  });
 });

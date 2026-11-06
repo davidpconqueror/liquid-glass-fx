@@ -21,6 +21,27 @@
         background: #f1f5f9;
         color: #0f172a;
       }
+      /* Clean scrollbars for controls panel */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(56, 189, 248, 0.5);
+      }
+      body.light ::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+      }
+      body.light ::-webkit-scrollbar-thumb:hover {
+        background: rgba(14, 165, 233, 0.6);
+      }
     </style>
   </head>
   <body>

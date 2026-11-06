@@ -59,11 +59,17 @@ export function createLiquidGlassPanel(
       appliedCamelKeys.push(prop);
     }
 
-    // Set base container styles
-    element.style.position = element.style.position || "relative";
-    element.style.overflow = "hidden";
-    appliedStyleKeys.push("overflow");
-    appliedCamelKeys.push("overflow");
+    // Set base container styles without clobbering existing user overflow/position
+    if (!element.style.position) {
+      element.style.position = "relative";
+      appliedStyleKeys.push("position");
+      appliedCamelKeys.push("position");
+    }
+    if (!element.style.overflow && !element.style.overflowY && !element.style.overflowX) {
+      element.style.overflow = "hidden";
+      appliedStyleKeys.push("overflow");
+      appliedCamelKeys.push("overflow");
+    }
 
     // Interactive button physics
     const isInteractive = opts.interactive || opts.button || config.button;
