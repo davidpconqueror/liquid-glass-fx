@@ -149,7 +149,19 @@ export function App() {
   const [selectedPreset, setSelectedPreset] = useState<GlassPresetKey>("crystal");
   const [config, setConfig] = useState<GlassConfig>(GLASS_PRESETS.crystal);
   const [activeTab, setActiveTab] = useState<"panel" | "lens">("panel");
+  const [activeModal, setActiveModal] = useState<"docs" | "quickstart" | null>(null);
+  const [copied, setCopied] = useState(false);
   const stageCanvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const copyInstallCommand = () => {
+    try {
+      navigator.clipboard.writeText("npm install liquid-glass-fx");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+    }
+  };
 
   useEffect(() => {
     if (activeTab === "lens" && stageCanvasRef.current) {
@@ -490,14 +502,16 @@ export function App() {
               as="button"
               preset="pill"
               interactive={true}
+              onClick={() => setActiveModal("quickstart")}
               style={{
                 padding: "8px 20px",
                 color: "inherit",
                 fontWeight: 600,
                 border: "none",
+                cursor: "pointer",
               }}
             >
-              Get Started
+              Get Started 🚀
             </LiquidGlassPanel>
           </div>
         </LiquidGlassPanel>
@@ -632,17 +646,19 @@ export function App() {
                       as="button"
                       preset="pill"
                       interactive
-                      style={{ padding: "12px 28px", color: "inherit", fontWeight: 600 }}
+                      onClick={() => setActiveTab("lens")}
+                      style={{ padding: "12px 28px", color: "inherit", fontWeight: 600, cursor: "pointer" }}
                     >
-                      Explore Shaders
+                      Explore Shaders ⚡
                     </LiquidGlassPanel>
                     <LiquidGlassPanel
                       as="button"
                       preset={selectedPreset}
                       interactive
-                      style={{ padding: "12px 28px", color: "inherit", fontWeight: 600 }}
+                      onClick={() => setActiveModal("docs")}
+                      style={{ padding: "12px 28px", color: "inherit", fontWeight: 600, cursor: "pointer" }}
                     >
-                      Documentation
+                      Documentation 📚
                     </LiquidGlassPanel>
                   </div>
                 </LiquidGlassPanel>
@@ -916,6 +932,347 @@ export function App() {
           </div>
         </div>
       </div>
+
+      {/* =========================================================================
+          INTERACTIVE DOCUMENTATION & GET STARTED MODAL
+         ========================================================================= */}
+      {activeModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            background: "rgba(0, 0, 0, 0.72)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+          }}
+          onClick={() => setActiveModal(null)}
+        >
+          <LiquidGlassPanel
+            preset="crystal"
+            theme={theme}
+            style={{
+              maxWidth: 720,
+              width: "100%",
+              maxHeight: "88vh",
+              overflowY: "auto",
+              padding: "36px 38px",
+              borderRadius: 24,
+              boxShadow: "0 25px 70px rgba(0,0,0,0.6)",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+            }}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+          >
+            {/* Header with Title and Close Button */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontSize: 28 }}>
+                  {activeModal === "quickstart" ? "🚀" : "📚"}
+                </span>
+                <div>
+                  <h2 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>
+                    {activeModal === "quickstart" ? "Getting Started with liquid-glass-fx" : "Documentation & API Reference"}
+                  </h2>
+                  <p style={{ fontSize: 13, opacity: 0.7, margin: "4px 0 0" }}>
+                    Physical optical glass in pure web standards (zero runtime dependencies)
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveModal(null)}
+                style={{
+                  background: "rgba(255,255,255,0.1)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: 34,
+                  height: 34,
+                  cursor: "pointer",
+                  color: "inherit",
+                  fontSize: 16,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Quickstart Tab Content */}
+            {activeModal === "quickstart" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                {/* 1. Install Box */}
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", opacity: 0.7 }}>
+                    1. Package Installation
+                  </label>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      background: "rgba(0,0,0,0.35)",
+                      padding: "12px 18px",
+                      borderRadius: 12,
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      marginTop: 8,
+                      fontFamily: "monospace",
+                      fontSize: 14,
+                    }}
+                  >
+                    <span>npm install liquid-glass-fx</span>
+                    <button
+                      onClick={copyInstallCommand}
+                      style={{
+                        background: copied ? "#10b981" : "rgba(56, 189, 248, 0.25)",
+                        border: "1px solid rgba(56, 189, 248, 0.4)",
+                        color: "inherit",
+                        borderRadius: 8,
+                        padding: "6px 12px",
+                        fontSize: 12,
+                        cursor: "pointer",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {copied ? "✓ Copied!" : "Copy"}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. React Example */}
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", opacity: 0.7 }}>
+                    2. React Component Usage
+                  </label>
+                  <pre
+                    style={{
+                      background: "rgba(0,0,0,0.35)",
+                      padding: "16px 20px",
+                      borderRadius: 14,
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      fontFamily: "monospace",
+                      fontSize: 13,
+                      lineHeight: 1.6,
+                      marginTop: 8,
+                      overflowX: "auto",
+                    }}
+                  >
+{`import { LiquidGlassPanel, LiquidGlassLens } from "liquid-glass-fx/react";
+
+export function GlassHero() {
+  return (
+    <>
+      {/* Hardware-accelerated UI card */}
+      <LiquidGlassPanel preset="crystal" style={{ padding: 28, borderRadius: 24 }}>
+        <h1>Liquid Optics</h1>
+      </LiquidGlassPanel>
+
+      {/* 120 FPS Draggable Snell's law WebGL lens */}
+      <LiquidGlassLens preset="magnifier" draggable={true} />
+    </>
+  );
+}`}
+                  </pre>
+                </div>
+
+                {/* 3. Vanilla JS Example */}
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px", opacity: 0.7 }}>
+                    3. Vanilla JS / Vue / Svelte Usage
+                  </label>
+                  <pre
+                    style={{
+                      background: "rgba(0,0,0,0.35)",
+                      padding: "16px 20px",
+                      borderRadius: 14,
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      fontFamily: "monospace",
+                      fontSize: 13,
+                      lineHeight: 1.6,
+                      marginTop: 8,
+                      overflowX: "auto",
+                    }}
+                  >
+{`import { createLiquidGlassPanel, createLiquidGlassLens } from "liquid-glass-fx";
+
+// Bind to any DOM element
+createLiquidGlassPanel(document.querySelector("#my-card"), { preset: "crystal" });
+createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`}
+                  </pre>
+                </div>
+
+                {/* Modal Footer Actions */}
+                <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+                  <button
+                    onClick={() => setActiveModal("docs")}
+                    style={{
+                      flex: 1,
+                      padding: "12px",
+                      borderRadius: 12,
+                      border: "none",
+                      background: "rgba(56, 189, 248, 0.35)",
+                      color: "inherit",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                    }}
+                  >
+                    View Full API Reference 📚
+                  </button>
+                  <a
+                    href="https://github.com/davidpconqueror/liquid-glass-fx"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      padding: "12px 20px",
+                      borderRadius: 12,
+                      border: "1px solid rgba(255,255,255,0.2)",
+                      background: "rgba(255,255,255,0.08)",
+                      color: "inherit",
+                      textDecoration: "none",
+                      fontWeight: 600,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                    }}
+                  >
+                    GitHub ↗
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Documentation Tab Content */}
+            {activeModal === "docs" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                {/* Package Exports */}
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Dual Package Exports</h3>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <div style={{ background: "rgba(0,0,0,0.3)", padding: "14px 16px", borderRadius: 12 }}>
+                      <strong style={{ fontSize: 13.5, color: "#38bdf8" }}>liquid-glass-fx (Core)</strong>
+                      <p style={{ fontSize: 12.5, opacity: 0.8, margin: "6px 0 0", lineHeight: 1.5 }}>
+                        Vanilla JS & CSS substrate (&lt; 8 KB, zero runtime dependencies). Exports <code>createLiquidGlassPanel</code>, <code>createLiquidGlassLens</code>, and presets.
+                      </p>
+                    </div>
+                    <div style={{ background: "rgba(0,0,0,0.3)", padding: "14px 16px", borderRadius: 12 }}>
+                      <strong style={{ fontSize: 13.5, color: "#38bdf8" }}>liquid-glass-fx/react</strong>
+                      <p style={{ fontSize: 12.5, opacity: 0.8, margin: "6px 0 0", lineHeight: 1.5 }}>
+                        First-class React 18 & 19 components with full TypeScript declarations: <code>&lt;LiquidGlassPanel /&gt;</code> and <code>&lt;LiquidGlassLens /&gt;</code>.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 6 Curated Presets */}
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>6 Curated Optical Presets</h3>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+                    {[
+                      { name: "default", desc: "Balanced everyday frosted glass for UI layouts" },
+                      { name: "crystal", desc: "Ultra-sharp biconvex glass with chromatic rim" },
+                      { name: "frosted", desc: "Heavy Gaussian diffusion with low specular" },
+                      { name: "obsidian", desc: "High-contrast dark smoky optical glass" },
+                      { name: "pill", desc: "Fully rounded pill button meniscus" },
+                      { name: "magnifier", desc: "High-magnification Dome lens mode" },
+                    ].map((p) => (
+                      <div key={p.name} style={{ background: "rgba(0,0,0,0.3)", padding: "12px 14px", borderRadius: 10 }}>
+                        <strong style={{ fontSize: 13, textTransform: "capitalize" }}>{p.name}</strong>
+                        <p style={{ fontSize: 11.5, opacity: 0.75, margin: "4px 0 0" }}>{p.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* The 16 Parameters Summary */}
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Optical Parameter Reference</h3>
+                  <div
+                    style={{
+                      maxHeight: 220,
+                      overflowY: "auto",
+                      borderRadius: 12,
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      background: "rgba(0,0,0,0.3)",
+                    }}
+                  >
+                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, textAlign: "left" }}>
+                      <thead>
+                        <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.1)", opacity: 0.7 }}>
+                          <th style={{ padding: "8px 12px" }}>Parameter</th>
+                          <th style={{ padding: "8px 12px" }}>Range</th>
+                          <th style={{ padding: "8px 12px" }}>Effect</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { p: "blurAmount", r: "0.0 - 1.0", d: "Frosted Gaussian blur radius" },
+                          { p: "refraction", r: "0.0 - 2.0", d: "Snell's law ray deflection strength" },
+                          { p: "chromAberration", r: "0.0 - 0.2", d: "RGB prismatic splitting at rim" },
+                          { p: "edgeHighlight", r: "0.0 - 2.0", d: "Meniscus crest specular highlight" },
+                          { p: "specular", r: "0.0 - 1.0", d: "2-light Blinn-Phong studio glints" },
+                          { p: "fresnel", r: "0.0 - 2.0", d: "Grazing angle reflection falloff" },
+                          { p: "zRadius", r: "2 - 80px", d: "Bevel heightfield depth" },
+                          { p: "bevelMode", r: "0 or 1", d: "0: Biconvex Pill | 1: Dome Magnifier" },
+                          { p: "distortion", r: "0.0 - 1.0", d: "Micro-surface liquid noise" },
+                          { p: "cornerRadius", r: "0 - 9999px", d: "SDF rounded-rectangle radius" },
+                        ].map((row) => (
+                          <tr key={row.p} style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                            <td style={{ padding: "6px 12px", fontFamily: "monospace", color: "#38bdf8" }}>{row.p}</td>
+                            <td style={{ padding: "6px 12px", opacity: 0.75 }}>{row.r}</td>
+                            <td style={{ padding: "6px 12px", opacity: 0.85 }}>{row.d}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Modal Footer Actions */}
+                <div style={{ display: "flex", gap: 12, marginTop: 4 }}>
+                  <button
+                    onClick={() => setActiveModal("quickstart")}
+                    style={{
+                      flex: 1,
+                      padding: "12px",
+                      borderRadius: 12,
+                      border: "none",
+                      background: "rgba(56, 189, 248, 0.35)",
+                      color: "inherit",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Quick Start & Installation 🚀
+                  </button>
+                  <a
+                    href="https://github.com/davidpconqueror/liquid-glass-fx"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      padding: "12px 24px",
+                      borderRadius: 12,
+                      border: "1px solid rgba(255,255,255,0.2)",
+                      background: "rgba(255,255,255,0.08)",
+                      color: "inherit",
+                      textDecoration: "none",
+                      fontWeight: 600,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                    }}
+                  >
+                    View on GitHub ↗
+                  </a>
+                </div>
+              </div>
+            )}
+          </LiquidGlassPanel>
+        </div>
+      )}
     </div>
   );
 }
