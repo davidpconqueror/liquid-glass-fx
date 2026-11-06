@@ -39,7 +39,9 @@ export function computeGlassStyle(
   const fresnelScale = Math.min(2.5, Math.max(0.2, fresnel));
   const chromaScale = Math.min(3.0, Math.max(0, chromAberration * 5.0));
   const refrScale = Math.min(3.0, Math.max(0, refraction));
-  const bevelDepth = Math.max(2, Math.min(32, Math.round(zRadius * 0.4)));
+  const bevelDepth = Math.max(2, Math.min(24, Math.round(zRadius * 0.3)));
+  // Subtle internal glass reflection: keep delicate, not an opaque white border
+  const internalBevelOpacity = Math.min(0.08, 0.035 * fresnelScale * edgeScale).toFixed(3);
 
   const shadowBox = [
     // 1. Sharp Contact Shadow
@@ -47,16 +49,16 @@ export function computeGlassStyle(
     // 2. Ambient Outer Shadow
     `0 ${(shadowOffsetY * 2.5).toFixed(1)}px ${Math.round(shadowSpread * 2)}px rgba(0, 0, 0, ${(shadowOpacity * 0.25).toFixed(3)})`,
     // 3. Top Specular Meniscus Crest (crisp studio glint)
-    `inset 0 1.5px 1px rgba(255, 255, 255, ${(0.55 * fresnelScale * edgeScale).toFixed(3)})`,
-    // 4. Physical Curved Bevel Inset (scaled by zRadius & refraction)
-    `inset 0 0 ${bevelDepth}px ${Math.round(bevelDepth * 0.5)}px rgba(255, 255, 255, ${(0.14 * refrScale * fresnelScale).toFixed(3)})`,
+    `inset 0 1.5px 1px rgba(255, 255, 255, ${(0.45 * fresnelScale * edgeScale).toFixed(3)})`,
+    // 4. Subtle Internal Bevel Contour (depth contour, never an opaque white border)
+    `inset 0 0 ${bevelDepth}px 0px rgba(255, 255, 255, ${internalBevelOpacity})`,
     // 5. Bottom Bevel Return (physical glass reflection)
-    `inset 0 -1.5px 1px rgba(255, 255, 255, ${(0.18 * fresnelScale * edgeScale).toFixed(3)})`,
-    // 6. Chromatic Dispersion Rim (cyan & magenta prismatic splitting)
+    `inset 0 -1.5px 1px rgba(255, 255, 255, ${(0.15 * fresnelScale * edgeScale).toFixed(3)})`,
+    // 6. Chromatic Dispersion Rim (cyan & magenta prismatic splitting driven by refraction)
     ...(chromaScale > 0.05
       ? [
-          `inset ${(1.5 * refrScale).toFixed(1)}px 0 1px rgba(56, 189, 248, ${(0.28 * chromaScale).toFixed(3)})`,
-          `inset -${(1.5 * refrScale).toFixed(1)}px 0 1px rgba(244, 63, 94, ${(0.22 * chromaScale).toFixed(3)})`,
+          `inset ${(Math.max(1, 1.5 * refrScale)).toFixed(1)}px 0 1px rgba(56, 189, 248, ${(0.22 * chromaScale * Math.min(1.5, Math.max(0.4, refrScale))).toFixed(3)})`,
+          `inset -${(Math.max(1, 1.5 * refrScale)).toFixed(1)}px 0 1px rgba(244, 63, 94, ${(0.18 * chromaScale * Math.min(1.5, Math.max(0.4, refrScale))).toFixed(3)})`,
         ]
       : []),
   ].join(", ");

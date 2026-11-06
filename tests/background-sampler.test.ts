@@ -36,5 +36,11 @@ describe("Background Sampler", () => {
     expect(texture).toBeDefined();
     expect(texture instanceof HTMLCanvasElement).toBe(true);
   });
+
+  it("should resolve theme strings into theme canvases", async () => {
+    const checker = await resolveBackgroundTexture("checker", 300, 200, true);
+    expect(checker).toBeDefined();
+    expect(checker instanceof HTMLCanvasElement).toBe(true);
+  });
 });
 

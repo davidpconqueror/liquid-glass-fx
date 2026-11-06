@@ -604,10 +604,11 @@ export function App() {
                   </p>
                 </div>
 
-                {/* Draggable WebGL Lens */}
+                {/* Draggable WebGL Lens (True Snell Refraction) */}
                 <LiquidGlassLens
                   preset={selectedPreset === "magnifier" ? "magnifier" : "default"}
                   config={config}
+                  background={bgTheme}
                   draggable={true}
                   initialPosition={{ x: 140, y: 160 }}
                   style={{
