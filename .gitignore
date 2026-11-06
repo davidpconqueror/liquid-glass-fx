@@ -8,4 +8,6 @@ dist
 .yarn
 .pnp.*
 yarn.lock
+docs/superpowers
+
 
