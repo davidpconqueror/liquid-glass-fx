@@ -155,4 +155,3 @@ export const PRESET_STYLES: Record<GlassPresetKey, PresetStyleDefinition> = {
     substrateDark: "rgba(15, 23, 42, 0.1)",
   },
 };
-

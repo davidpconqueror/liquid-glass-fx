@@ -19,8 +19,7 @@ describe("Vanilla DOM Panel Engine", () => {
     expect(container.getAttribute("data-liquid-glass")).toBe("true");
     expect(container.getAttribute("data-preset")).toBe("crystal");
     const filter =
-      container.style.getPropertyValue("backdrop-filter") ||
-      container.style.backdropFilter;
+      container.style.getPropertyValue("backdrop-filter") || container.style.backdropFilter;
     expect(filter).toContain("blur(");
     expect(container.style.boxShadow).toContain("rgba(0, 0, 0,");
 
@@ -53,8 +52,7 @@ describe("Vanilla DOM Panel Engine", () => {
     expect(container.getAttribute("data-liquid-glass")).toBeNull();
     expect(container.getAttribute("data-preset")).toBeNull();
     const filter =
-      container.style.getPropertyValue("backdrop-filter") ||
-      container.style.backdropFilter;
+      container.style.getPropertyValue("backdrop-filter") || container.style.backdropFilter;
     expect(!filter || filter === "").toBe(true);
   });
 

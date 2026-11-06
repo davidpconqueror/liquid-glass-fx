@@ -47,69 +47,31 @@ export function generateProceduralBackdrop(
   // 2. Ambient Aurora Radial Orbs
   if (typeof ctx.createRadialGradient === "function") {
     // Emerald / Lime Glow
-    const limeGrad = ctx.createRadialGradient(
-      w * 0.4,
-      h * 0.3,
-      0,
-      w * 0.4,
-      h * 0.3,
-      w * 0.45
-    );
-    limeGrad.addColorStop(
-      0,
-      isDark ? "rgba(16, 185, 129, 0.45)" : "rgba(16, 185, 129, 0.35)"
-    );
-    limeGrad.addColorStop(
-      0.6,
-      isDark ? "rgba(6, 95, 70, 0.25)" : "rgba(20, 184, 166, 0.2)"
-    );
+    const limeGrad = ctx.createRadialGradient(w * 0.4, h * 0.3, 0, w * 0.4, h * 0.3, w * 0.45);
+    limeGrad.addColorStop(0, isDark ? "rgba(16, 185, 129, 0.45)" : "rgba(16, 185, 129, 0.35)");
+    limeGrad.addColorStop(0.6, isDark ? "rgba(6, 95, 70, 0.25)" : "rgba(20, 184, 166, 0.2)");
     limeGrad.addColorStop(1, "transparent");
     ctx.fillStyle = limeGrad;
     ctx.fillRect(0, 0, w, h);
 
     // Electric Cyan / Cobalt Glow
-    const cobaltGrad = ctx.createRadialGradient(
-      w * 0.75,
-      h * 0.65,
-      0,
-      w * 0.75,
-      h * 0.65,
-      w * 0.5
-    );
-    cobaltGrad.addColorStop(
-      0,
-      isDark ? "rgba(56, 189, 248, 0.4)" : "rgba(14, 165, 233, 0.3)"
-    );
-    cobaltGrad.addColorStop(
-      0.6,
-      isDark ? "rgba(30, 58, 138, 0.2)" : "rgba(56, 189, 248, 0.15)"
-    );
+    const cobaltGrad = ctx.createRadialGradient(w * 0.75, h * 0.65, 0, w * 0.75, h * 0.65, w * 0.5);
+    cobaltGrad.addColorStop(0, isDark ? "rgba(56, 189, 248, 0.4)" : "rgba(14, 165, 233, 0.3)");
+    cobaltGrad.addColorStop(0.6, isDark ? "rgba(30, 58, 138, 0.2)" : "rgba(56, 189, 248, 0.15)");
     cobaltGrad.addColorStop(1, "transparent");
     ctx.fillStyle = cobaltGrad;
     ctx.fillRect(0, 0, w, h);
 
     // Rose / Violet Accent Glow
-    const roseGrad = ctx.createRadialGradient(
-      w * 0.15,
-      h * 0.75,
-      0,
-      w * 0.15,
-      h * 0.75,
-      w * 0.35
-    );
-    roseGrad.addColorStop(
-      0,
-      isDark ? "rgba(244, 63, 94, 0.35)" : "rgba(244, 63, 94, 0.25)"
-    );
+    const roseGrad = ctx.createRadialGradient(w * 0.15, h * 0.75, 0, w * 0.15, h * 0.75, w * 0.35);
+    roseGrad.addColorStop(0, isDark ? "rgba(244, 63, 94, 0.35)" : "rgba(244, 63, 94, 0.25)");
     roseGrad.addColorStop(1, "transparent");
     ctx.fillStyle = roseGrad;
     ctx.fillRect(0, 0, w, h);
   }
 
   // 3. Crisp Optical Grid Lines
-  ctx.strokeStyle = isDark
-    ? "rgba(255, 255, 255, 0.08)"
-    : "rgba(15, 23, 42, 0.08)";
+  ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(15, 23, 42, 0.08)";
   ctx.lineWidth = 1;
   const gridSize = 48;
 
@@ -166,7 +128,7 @@ export function generateThemeBackdrop(
     const c2 = isDark ? "#1e293b" : "#cbd5e1";
     for (let x = 0; x < w; x += tileSize) {
       for (let y = 0; y < h; y += tileSize) {
-        ctx.fillStyle = ((x / tileSize) + (y / tileSize)) % 2 === 0 ? c1 : c2;
+        ctx.fillStyle = (x / tileSize + y / tileSize) % 2 === 0 ? c1 : c2;
         ctx.fillRect(x, y, tileSize, tileSize);
       }
     }
@@ -223,7 +185,14 @@ export function generateThemeBackdrop(
         { x: 0.2, y: 0.8, r: 0.4, c: "rgba(16, 185, 129, 0.8)" },
       ];
       for (const blob of colors) {
-        const rad = ctx.createRadialGradient(w * blob.x, h * blob.y, 0, w * blob.x, h * blob.y, w * blob.r);
+        const rad = ctx.createRadialGradient(
+          w * blob.x,
+          h * blob.y,
+          0,
+          w * blob.x,
+          h * blob.y,
+          w * blob.r
+        );
         rad.addColorStop(0, blob.c);
         rad.addColorStop(1, "transparent");
         ctx.fillStyle = rad;

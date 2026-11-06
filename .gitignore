@@ -7,7 +7,6 @@ dist
 *.tgz
 .yarn
 .pnp.*
-yarn.lock
 docs/superpowers
 
 

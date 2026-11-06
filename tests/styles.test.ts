@@ -28,10 +28,7 @@ describe("CSS Style Generator", () => {
   });
 
   it("should omit chromatic dispersion rim when chromAberration is very low", () => {
-    const style = computeGlassStyle(
-      { ...GLASS_PRESETS.default, chromAberration: 0.005 },
-      "dark"
-    );
+    const style = computeGlassStyle({ ...GLASS_PRESETS.default, chromAberration: 0.005 }, "dark");
     expect(style.boxShadow).not.toContain("rgba(56, 189, 248,");
   });
 
@@ -53,4 +50,3 @@ describe("CSS Style Generator", () => {
     expect(darkStyle.backgroundColor).toContain("15, 23, 42");
   });
 });
-

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -21,7 +21,7 @@
         background: #f1f5f9;
         color: #0f172a;
       }
-      /* Clean scrollbars for controls panel */
+      /* Clean custom scrollbars */
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
@@ -30,29 +30,75 @@
         background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.22);
+        border-radius: 9999px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: rgba(56, 189, 248, 0.5);
+        background: rgba(56, 189, 248, 0.55);
       }
       body.light ::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.22);
       }
       body.light ::-webkit-scrollbar-thumb:hover {
-        background: rgba(14, 165, 233, 0.6);
+        background: rgba(14, 165, 233, 0.65);
+      }
+
+      /* Inset Glass Scrollbar - safely constrained inside rounded cards */
+      .glass-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+      }
+      .glass-scrollbar::-webkit-scrollbar {
+        width: 5px;
+      }
+      .glass-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+        margin: 14px 0;
+        border-radius: 9999px;
+      }
+      .glass-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.24);
+        border-radius: 9999px;
+      }
+      .glass-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(56, 189, 248, 0.65);
+      }
+      body.light .glass-scrollbar {
+        scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+      }
+      body.light .glass-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.24);
+        border-radius: 9999px;
+      }
+      body.light .glass-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(14, 165, 233, 0.7);
       }
       @keyframes floatOrb1 {
-        0%, 100% { transform: translate(0px, 0px) scale(1); }
-        50% { transform: translate(60px, -45px) scale(1.12); }
+        0%,
+        100% {
+          transform: translate(0px, 0px) scale(1);
+        }
+        50% {
+          transform: translate(60px, -45px) scale(1.12);
+        }
       }
       @keyframes floatOrb2 {
-        0%, 100% { transform: translate(0px, 0px) scale(1); }
-        50% { transform: translate(-55px, 45px) scale(0.92); }
+        0%,
+        100% {
+          transform: translate(0px, 0px) scale(1);
+        }
+        50% {
+          transform: translate(-55px, 45px) scale(0.92);
+        }
       }
       @keyframes floatOrb3 {
-        0%, 100% { transform: translate(0px, 0px) scale(1); }
-        50% { transform: translate(45px, 50px) scale(1.15); }
+        0%,
+        100% {
+          transform: translate(0px, 0px) scale(1);
+        }
+        50% {
+          transform: translate(45px, 50px) scale(1.15);
+        }
       }
       .anim-orb-1 {
         animation: floatOrb1 18s ease-in-out infinite;
@@ -70,4 +116,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

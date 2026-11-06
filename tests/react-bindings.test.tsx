@@ -1,11 +1,7 @@
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import {
-  LiquidGlassPanel,
-  LiquidGlassLens,
-  useDragPhysics,
-} from "../src/react";
+import { LiquidGlassPanel, LiquidGlassLens, useDragPhysics } from "../src/react";
 
 // @ts-expect-error - tells React 18/19 we are running in an act-supported environment
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
@@ -78,12 +74,7 @@ describe("React Bindings", () => {
     const root = createRoot(container);
     await act(async () => {
       root.render(
-        <LiquidGlassLens
-          ref={ref}
-          preset="magnifier"
-          draggable={true}
-          data-testid="lens"
-        />
+        <LiquidGlassLens ref={ref} preset="magnifier" draggable={true} data-testid="lens" />
       );
     });
 

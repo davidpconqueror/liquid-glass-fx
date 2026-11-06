@@ -144,11 +144,7 @@ export class LensRenderer {
     const gl = this.gl;
     this.quadBuf = gl.createBuffer()!;
     gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuf);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
-      gl.STATIC_DRAW
-    );
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
 
     this.panelBuf = gl.createBuffer()!;
     gl.bindBuffer(gl.ARRAY_BUFFER, this.panelBuf);
@@ -253,8 +249,8 @@ export class LensRenderer {
     gl.bindTexture(gl.TEXTURE_2D, fboSet.blurA.tex);
     gl.uniform1i(this.glassU.u_blurTex, 1);
 
-    const bgW = bgResolution ? Math.round(bgResolution.width * dpr) : (fboSet.bg.w || w);
-    const bgH = bgResolution ? Math.round(bgResolution.height * dpr) : (fboSet.bg.h || h);
+    const bgW = bgResolution ? Math.round(bgResolution.width * dpr) : fboSet.bg.w || w;
+    const bgH = bgResolution ? Math.round(bgResolution.height * dpr) : fboSet.bg.h || h;
 
     gl.uniform2f(this.glassU.u_res, bgW, bgH);
     gl.uniform2f(this.glassU.u_center, w * 0.5, h * 0.5);
@@ -381,4 +377,3 @@ export class LensRenderer {
     return map;
   }
 }
-
