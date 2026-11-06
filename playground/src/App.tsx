@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   LiquidGlassPanel,
   LiquidGlassLens,
@@ -11,12 +11,151 @@ import {
 
 type BackgroundKey = "aurora" | "blueprint" | "fluid" | "neon" | "checker";
 
+function drawStageBackdrop(
+  canvas: HTMLCanvasElement,
+  bgTheme: BackgroundKey,
+  theme: "dark" | "light"
+) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const w = canvas.width;
+  const h = canvas.height;
+  const isDark = theme === "dark";
+
+  ctx.fillStyle = isDark ? "#070b14" : "#f8fafc";
+  ctx.fillRect(0, 0, w, h);
+
+  if (bgTheme === "checker") {
+    const size = 36;
+    const c1 = isDark ? "#090d16" : "#ffffff";
+    const c2 = isDark ? "#1e293b" : "#e2e8f0";
+    for (let x = 0; x < w; x += size) {
+      for (let y = 0; y < h; y += size) {
+        ctx.fillStyle = ((x / size) + (y / size)) % 2 === 0 ? c1 : c2;
+        ctx.fillRect(x, y, size, size);
+      }
+    }
+    const grad = ctx.createLinearGradient(0, h * 0.45, w, h * 0.55);
+    grad.addColorStop(0, "rgba(236, 72, 153, 0.85)");
+    grad.addColorStop(0.25, "rgba(139, 92, 246, 0.85)");
+    grad.addColorStop(0.5, "rgba(59, 130, 246, 0.85)");
+    grad.addColorStop(0.75, "rgba(16, 185, 129, 0.85)");
+    grad.addColorStop(1, "rgba(245, 158, 11, 0.85)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, h * 0.42, w, 32);
+
+    ctx.strokeStyle = isDark ? "rgba(56, 189, 248, 0.6)" : "rgba(14, 165, 233, 0.6)";
+    ctx.lineWidth = 2;
+    for (let r = 50; r <= 250; r += 50) {
+      ctx.beginPath();
+      ctx.arc(w * 0.55, h * 0.5, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  } else if (bgTheme === "blueprint") {
+    ctx.fillStyle = isDark ? "#030816" : "#e2e8f0";
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = isDark ? "rgba(56, 189, 248, 0.3)" : "rgba(14, 165, 233, 0.35)";
+    ctx.lineWidth = 1;
+    for (let x = 0; x < w; x += 32) {
+      ctx.beginPath();
+      ctx.moveTo(x + 0.5, 0);
+      ctx.lineTo(x + 0.5, h);
+      ctx.stroke();
+    }
+    for (let y = 0; y < h; y += 32) {
+      ctx.beginPath();
+      ctx.moveTo(0, y + 0.5);
+      ctx.lineTo(w, y + 0.5);
+      ctx.stroke();
+    }
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.7)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(w * 0.55, h * 0.5, 130, 0, Math.PI * 2);
+    ctx.arc(w * 0.55, h * 0.5, 65, 0, Math.PI * 2);
+    ctx.stroke();
+  } else if (bgTheme === "fluid") {
+    ctx.fillStyle = isDark ? "#090d16" : "#f8fafc";
+    ctx.fillRect(0, 0, w, h);
+    const blobs = [
+      { x: 0.2, y: 0.3, r: 0.45, c: "#ec4899" },
+      { x: 0.75, y: 0.35, r: 0.5, c: "#06b6d4" },
+      { x: 0.5, y: 0.75, r: 0.45, c: "#8b5cf6" },
+      { x: 0.85, y: 0.8, r: 0.4, c: "#10b981" },
+    ];
+    for (const b of blobs) {
+      const g = ctx.createRadialGradient(w * b.x, h * b.y, 0, w * b.x, h * b.y, w * b.r);
+      g.addColorStop(0, b.c);
+      g.addColorStop(1, "transparent");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+    }
+  } else if (bgTheme === "neon") {
+    ctx.fillStyle = isDark ? "#070b14" : "#f1f5f9";
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = "#ec4899";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(0, h * 0.25);
+    ctx.lineTo(w, h * 0.4);
+    ctx.stroke();
+    ctx.strokeStyle = "#06b6d4";
+    ctx.beginPath();
+    ctx.moveTo(0, h * 0.75);
+    ctx.lineTo(w, h * 0.55);
+    ctx.stroke();
+  } else {
+    // aurora
+    const g1 = ctx.createRadialGradient(w * 0.3, h * 0.4, 0, w * 0.3, h * 0.4, w * 0.4);
+    g1.addColorStop(0, "rgba(168, 85, 247, 0.8)");
+    g1.addColorStop(1, "transparent");
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, w, h);
+
+    const g2 = ctx.createRadialGradient(w * 0.7, h * 0.6, 0, w * 0.7, h * 0.6, w * 0.45);
+    g2.addColorStop(0, "rgba(16, 185, 129, 0.75)");
+    g2.addColorStop(1, "transparent");
+    ctx.fillStyle = g2;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  // Draw optical test typography & graphics right on the backdrop!
+  ctx.fillStyle = isDark ? "#ffffff" : "#0f172a";
+  ctx.font = "800 24px system-ui, -apple-system, sans-serif";
+  ctx.fillText("PHYSICAL OPTICAL LENS", 36, 60);
+
+  ctx.fillStyle = isDark ? "rgba(255, 255, 255, 0.75)" : "rgba(15, 23, 42, 0.75)";
+  ctx.font = "600 14px system-ui, -apple-system, sans-serif";
+  ctx.fillText("Snell's Law: n₁·sin(θ₁) = n₂·sin(θ₂)  |  RGB Dispersion  |  120 FPS", 36, 88);
+
+  ctx.fillStyle = isDark ? "rgba(56, 189, 248, 0.9)" : "rgba(14, 165, 233, 0.9)";
+  ctx.font = "bold 13px monospace";
+  ctx.fillText("DRAG LENS OVER THIS TEXT & PATTERNS TO WATCH REFRACTION", 36, 116);
+
+  // Geometric test grid bars
+  ctx.fillStyle = "#ec4899";
+  ctx.fillRect(36, 134, 70, 8);
+  ctx.fillStyle = "#8b5cf6";
+  ctx.fillRect(114, 134, 70, 8);
+  ctx.fillStyle = "#06b6d4";
+  ctx.fillRect(192, 134, 70, 8);
+  ctx.fillStyle = "#10b981";
+  ctx.fillRect(270, 134, 70, 8);
+}
+
 export function App() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [bgTheme, setBgTheme] = useState<BackgroundKey>("aurora");
   const [selectedPreset, setSelectedPreset] = useState<GlassPresetKey>("crystal");
   const [config, setConfig] = useState<GlassConfig>(GLASS_PRESETS.crystal);
   const [activeTab, setActiveTab] = useState<"panel" | "lens">("panel");
+  const stageCanvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    if (activeTab === "lens" && stageCanvasRef.current) {
+      drawStageBackdrop(stageCanvasRef.current, bgTheme, theme);
+    }
+  }, [activeTab, bgTheme, theme]);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
@@ -567,54 +706,39 @@ export function App() {
                   height: 540,
                   borderRadius: 24,
                   border: "1px solid rgba(255,255,255,0.15)",
-                  background:
-                    bgTheme === "blueprint"
-                      ? "repeating-linear-gradient(0deg, rgba(56,189,248,0.2) 0px, rgba(56,189,248,0.2) 1px, transparent 1px, transparent 32px), repeating-linear-gradient(90deg, rgba(56,189,248,0.2) 0px, rgba(56,189,248,0.2) 1px, transparent 1px, transparent 32px)"
-                      : bgTheme === "fluid"
-                      ? "radial-gradient(circle at 30% 40%, #ec4899 0%, #8b5cf6 35%, #06b6d4 70%, #10b981 100%)"
-                      : bgTheme === "checker"
-                      ? "repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 40px 40px"
-                      : "linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #064e3b 100%)",
                   overflow: "hidden",
-                  padding: 32,
                   boxShadow: "inset 0 0 100px rgba(0,0,0,0.5)",
                 }}
               >
-                <div style={{ userSelect: "none", pointerEvents: "none", maxWidth: 460 }}>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      padding: "4px 10px",
-                      borderRadius: 12,
-                      background: "rgba(56, 189, 248, 0.2)",
-                      border: "1px solid rgba(56, 189, 248, 0.4)",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      marginBottom: 12,
-                    }}
-                  >
-                    120 FPS WebGL Engine
-                  </span>
-                  <h2 style={{ fontSize: 28, marginBottom: 12, fontWeight: 800 }}>
-                    Draggable Refraction Lens
-                  </h2>
-                  <p style={{ fontSize: 15, opacity: 0.9, lineHeight: 1.6 }}>
-                    Grab and drag the optical lens across the backdrop. Watch real-time Snell's law
-                    light ray bending, RGB chromatic dispersion, and studio Blinn-Phong specular glints!
-                  </p>
-                </div>
+                {/* Backdrop Stage Canvas that the lens physically refracts */}
+                <canvas
+                  id="lens-stage-canvas"
+                  ref={stageCanvasRef}
+                  width={800}
+                  height={540}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "block",
+                    pointerEvents: "none",
+                  }}
+                />
 
-                {/* Draggable WebGL Lens (True Snell Refraction) */}
+                {/* Draggable WebGL Lens (True Snell Refraction over the stage) */}
                 <LiquidGlassLens
                   preset={selectedPreset === "magnifier" ? "magnifier" : "default"}
                   config={config}
-                  background={bgTheme}
+                  backgroundSelector="#lens-stage-canvas"
                   draggable={true}
-                  initialPosition={{ x: 140, y: 160 }}
+                  initialPosition={{ x: 260, y: 150 }}
                   style={{
+                    position: "absolute",
                     width: 240,
                     height: 240,
                     borderRadius: `${config.cornerRadius}px`,
+                    zIndex: 10,
                   }}
                 />
               </div>

@@ -121,6 +121,7 @@ export class LensRenderer {
       "u_res",
       "u_pad",
       "u_scroll",
+      "u_blurAmount",
       "u_refract",
       "u_chroma",
       "u_edgeHL",
@@ -224,7 +225,8 @@ export class LensRenderer {
     width: number,
     height: number,
     dpr: number,
-    scrollOffset: { x: number; y: number } = { x: 0, y: 0 }
+    lensPosition: { x: number; y: number } = { x: 0, y: 0 },
+    bgResolution?: { width: number; height: number }
   ): void {
     if (this.contextLost || !this.activeFBOs) return;
     const gl = this.gl;
@@ -251,12 +253,16 @@ export class LensRenderer {
     gl.bindTexture(gl.TEXTURE_2D, fboSet.blurA.tex);
     gl.uniform1i(this.glassU.u_blurTex, 1);
 
-    gl.uniform2f(this.glassU.u_res, w, h);
+    const bgW = bgResolution ? Math.round(bgResolution.width * dpr) : (fboSet.bg.w || w);
+    const bgH = bgResolution ? Math.round(bgResolution.height * dpr) : (fboSet.bg.h || h);
+
+    gl.uniform2f(this.glassU.u_res, bgW, bgH);
     gl.uniform2f(this.glassU.u_center, w * 0.5, h * 0.5);
     gl.uniform2f(this.glassU.u_size, w, h);
     gl.uniform1f(this.glassU.u_radius, config.cornerRadius * dpr);
     gl.uniform1f(this.glassU.u_pad, 0);
-    gl.uniform2f(this.glassU.u_scroll, scrollOffset.x * dpr, scrollOffset.y * dpr);
+    gl.uniform2f(this.glassU.u_scroll, lensPosition.x * dpr, lensPosition.y * dpr);
+    gl.uniform1f(this.glassU.u_blurAmount, config.blurAmount);
     gl.uniform1f(this.glassU.u_refract, config.refraction);
     gl.uniform1f(this.glassU.u_chroma, config.chromAberration);
     gl.uniform1f(this.glassU.u_edgeHL, config.edgeHighlight);

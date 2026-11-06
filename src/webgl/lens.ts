@@ -18,6 +18,7 @@ export function createLiquidGlassLens(
   }
 
   let currentOptions = { ...options };
+  let currentPos = options.initialPosition || { x: 0, y: 0 };
   let isMounted = true;
   let rafId: number | null = null;
   let dragController: DragPhysicsController | null = null;
@@ -59,34 +60,42 @@ export function createLiquidGlassLens(
     if (renderer && !renderer.contextLost) {
       const isDark = document.documentElement.classList.contains("dark");
       let bgTexture: HTMLCanvasElement | HTMLImageElement;
+      let bgW = targetW;
+      let bgH = targetH;
 
       if (currentOptions.backgroundSelector) {
         const selected = document.querySelector(currentOptions.backgroundSelector);
         if (selected instanceof HTMLCanvasElement || selected instanceof HTMLImageElement) {
           bgTexture = selected;
+          bgW = selected instanceof HTMLCanvasElement ? selected.width : selected.naturalWidth;
+          bgH = selected instanceof HTMLCanvasElement ? selected.height : selected.naturalHeight;
         } else {
-          bgTexture = await resolveBackgroundTexture(
-            currentOptions.background,
-            targetW,
-            targetH,
-            isDark
-          );
+          bgTexture = await resolveBackgroundTexture(currentOptions.background, targetW, targetH, isDark);
+          bgW = bgTexture instanceof HTMLCanvasElement ? bgTexture.width : targetW;
+          bgH = bgTexture instanceof HTMLCanvasElement ? bgTexture.height : targetH;
         }
+      } else if (
+        currentOptions.background instanceof HTMLCanvasElement ||
+        currentOptions.background instanceof HTMLImageElement
+      ) {
+        bgTexture = currentOptions.background;
+        bgW = bgTexture instanceof HTMLCanvasElement ? bgTexture.width : bgTexture.naturalWidth;
+        bgH = bgTexture instanceof HTMLCanvasElement ? bgTexture.height : bgTexture.naturalHeight;
       } else {
-        bgTexture = await resolveBackgroundTexture(
-          currentOptions.background,
-          targetW,
-          targetH,
-          isDark
-        );
+        const parent = container.parentElement;
+        const pW = parent ? Math.round((parent.offsetWidth || 800) * dpr) : targetW;
+        const pH = parent ? Math.round((parent.offsetHeight || 500) * dpr) : targetH;
+        bgTexture = await resolveBackgroundTexture(currentOptions.background, pW, pH, isDark);
+        bgW = bgTexture instanceof HTMLCanvasElement ? bgTexture.width : pW;
+        bgH = bgTexture instanceof HTMLCanvasElement ? bgTexture.height : pH;
       }
 
       if (!isMounted) return;
 
-      renderer.uploadSourceAndBlur(bgTexture, targetW, targetH, config.blurAmount);
-      renderer.renderGlass(canvas, config, w, h, dpr, {
-        x: window.scrollX,
-        y: window.scrollY,
+      renderer.uploadSourceAndBlur(bgTexture, bgW, bgH, config.blurAmount);
+      renderer.renderGlass(canvas, config, w, h, dpr, currentPos, {
+        width: bgW / dpr,
+        height: bgH / dpr,
       });
     } else {
       // Fallback: apply CSS styles directly to container if WebGL is unavailable
@@ -115,6 +124,7 @@ export function createLiquidGlassLens(
     dragController = new DragPhysicsController({
       initialPosition: currentOptions.initialPosition,
       onPositionChange: (pos) => {
+        currentPos = { ...pos };
         container.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
         currentOptions.onPositionChange?.(pos);
         scheduleRender();
@@ -141,6 +151,7 @@ export function createLiquidGlassLens(
       if (dragController) {
         dragController.setPosition(x, y);
       } else {
+        currentPos = { x, y };
         container.style.transform = `translate3d(${x}px, ${y}px, 0)`;
         scheduleRender();
       }

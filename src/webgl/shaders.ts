@@ -59,14 +59,10 @@ varying vec2 v_localPx;
 varying vec2 v_screenUV;
 
 void main() {
-  vec2 total = u_size + vec2(u_pad * 2.0);
-  v_localPx = a_pos * total;
-  vec2 px = u_center + a_pos * total;
-  vec2 scrolledPx = px + u_scroll;
-  v_screenUV = vec2(scrolledPx.x / u_res.x, 1.0 - scrolledPx.y / u_res.y);
-  vec2 ndc = (px / u_res) * 2.0 - 1.0;
-  ndc.y = -ndc.y;
-  gl_Position = vec4(ndc, 0.0, 1.0);
+  v_localPx = a_pos * u_size;
+  vec2 stagePx = u_scroll + (a_pos + 0.5) * u_size;
+  v_screenUV = vec2(stagePx.x / max(u_res.x, 1.0), 1.0 - stagePx.y / max(u_res.y, 1.0));
+  gl_Position = vec4(a_pos * 2.0, 0.0, 1.0);
 }
 `;
 
@@ -95,6 +91,7 @@ uniform float u_shadowSpread;
 uniform float u_shadowOffY;
 uniform float u_bevelMode;
 uniform float u_pad;
+uniform float u_blurAmount;
 
 varying vec2 v_localPx;
 varying vec2 v_screenUV;
@@ -201,9 +198,9 @@ void main() {
     texture2D(u_blurTex, clamp(base - caD, 0.001, 0.999)).b
   );
 
-  // Edge-weighted blur mix
-  float edgeMix = 1.0 - edge * 0.35;
-  vec3 col = mix(sharp, blur, edgeMix);
+  // Sharp vs frosted blur mix controlled by u_blurAmount
+  float blurWeight = clamp(u_blurAmount * 2.2, 0.0, 1.0);
+  vec3 col = mix(sharp, blur, blurWeight);
 
   // Exposure & Saturation
   col *= 1.0 + u_brightness;
@@ -225,17 +222,17 @@ void main() {
   float sp2 = pow(max(dot(N, normalize(L2 + V)), 0.0), 24.0) * 0.35;
   float totalSpec = (sp1 + sp2) * u_spec;
 
-  // Perimeter rim sheen
-  float rim = edge * u_edgeHL * 0.15;
-  float innerGlow = smoothstep(3.0, 0.0, -sdf) * u_edgeHL * 0.10;
-  float envRefl = (N.y * 0.5 + 0.5) * fres * 0.05;
+  // Perimeter rim sheen & edge highlights (subtle & glassy)
+  float rim = edge * u_edgeHL * 0.12;
+  float innerGlow = smoothstep(2.5, 0.0, -sdf) * u_edgeHL * 0.06;
+  float envRefl = (N.y * 0.5 + 0.5) * fres * 0.04;
 
-  // Final optical composite
+  // Final optical composite (transparent glass transmission)
   vec3 fin = col;
   fin += vec3(totalSpec);
   fin += vec3(rim + innerGlow);
   fin += vec3(envRefl);
-  fin = mix(fin, vec3(1.0), fres * 0.12);
+  fin = mix(fin, vec3(1.0), fres * 0.05);
 
   gl_FragColor = vec4(fin, mask * u_alpha);
 }
