@@ -2,6 +2,7 @@ import type { PanelOptions, LiquidGlassPanelHandle } from "../types";
 import { resolveGlassConfig } from "../config";
 import { computeGlassStyle } from "./styles";
 import { injectGlassSvgDefs } from "./svg-filter-manager";
+import { subscribeToAutoTheme } from "./theme-observer";
 
 export function createLiquidGlassPanel(
   element: HTMLElement,
@@ -21,6 +22,21 @@ export function createLiquidGlassPanel(
   const appliedStyleKeys: string[] = [];
   const appliedCamelKeys: string[] = [];
   let currentOptions = { ...options };
+  let unsubscribeTheme: (() => void) | null = null;
+
+  const syncThemeSubscription = () => {
+    const isAutoTheme = currentOptions.theme === "auto" || !currentOptions.theme;
+    if (isAutoTheme) {
+      if (!unsubscribeTheme) {
+        unsubscribeTheme = subscribeToAutoTheme(() => {
+          applyStyles(currentOptions);
+        });
+      }
+    } else if (unsubscribeTheme) {
+      unsubscribeTheme();
+      unsubscribeTheme = null;
+    }
+  };
 
   const clearAppliedStyles = () => {
     for (const key of appliedStyleKeys) {
@@ -109,13 +125,20 @@ export function createLiquidGlassPanel(
   }
 
   applyStyles(currentOptions);
+  syncThemeSubscription();
 
   return {
     update(newOptions: Partial<PanelOptions>) {
       currentOptions = { ...currentOptions, ...newOptions };
+      syncThemeSubscription();
       applyStyles(currentOptions);
     },
     destroy() {
+      if (unsubscribeTheme) {
+        unsubscribeTheme();
+        unsubscribeTheme = null;
+      }
+
       element.removeAttribute("data-liquid-glass");
       element.removeAttribute("data-preset");
 

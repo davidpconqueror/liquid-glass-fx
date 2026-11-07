@@ -3,6 +3,9 @@ import type { GlassConfig, GlassPresetKey } from "../types";
 import { resolveGlassConfig } from "../config";
 import { computeGlassStyle } from "../dom/styles";
 import { createLiquidGlassPanel } from "../dom/panel";
+import { resolveIsDark, subscribeToAutoTheme } from "../dom/theme-observer";
+
+const noopSubscribe = () => () => {};
 
 export interface LiquidGlassPanelProps<T extends React.ElementType = "div"> {
   as?: T;
@@ -42,9 +45,17 @@ export const LiquidGlassPanel = React.forwardRef(function LiquidGlassPanel<
 
   const activeConfig = React.useMemo(() => resolveGlassConfig(preset, config), [preset, config]);
 
+  const isAutoDark = React.useSyncExternalStore(
+    theme === "auto" ? subscribeToAutoTheme : noopSubscribe,
+    () => resolveIsDark("auto"),
+    () => false
+  );
+
+  const effectiveTheme = theme === "auto" ? (isAutoDark ? "dark" : "light") : theme;
+
   const ssrStyle = React.useMemo(() => {
-    return computeGlassStyle(activeConfig, theme);
-  }, [activeConfig, theme]);
+    return computeGlassStyle(activeConfig, effectiveTheme);
+  }, [activeConfig, effectiveTheme]);
 
   React.useEffect(() => {
     const el = internalRef.current;

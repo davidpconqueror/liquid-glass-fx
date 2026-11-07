@@ -4,6 +4,11 @@ import path from "path";
 
 export default defineConfig({
   root: "playground",
+  base: "./",
+  build: {
+    outDir: "../dist/playground",
+    emptyOutDir: true,
+  },
   plugins: [react()],
   resolve: {
     alias: {

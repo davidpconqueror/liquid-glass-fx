@@ -18,11 +18,18 @@
       "require": "./dist/react/index.cjs"
     }
   },
+  "bin": {
+    "liquid-glass-fx": "./bin/cli.mjs",
+    "liquid-glass-playground": "./bin/cli.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && vite build --config playground/vite.config.ts",
+    "build:lib": "tsup",
+    "build:playground": "vite build --config playground/vite.config.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
@@ -32,6 +39,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"playground/**/*.{ts,tsx,html,css}\" \"*.{js,ts,json,md,yml}\" \".github/**/*.{yml,yaml}\"",
     "audit": "yarn npm audit --all",
     "playground": "vite playground",
+    "playground:dist": "node ./bin/cli.mjs",
     "prepublishOnly": "yarn test && yarn typecheck && yarn lint && yarn build"
   },
   "repository": {

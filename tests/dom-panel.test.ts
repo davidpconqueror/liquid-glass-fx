@@ -79,4 +79,64 @@ describe("Vanilla DOM Panel Engine", () => {
 
     handle.destroy();
   });
+
+  it("should dynamically adapt styles when document class changes in auto theme", async () => {
+    document.documentElement.classList.remove("dark");
+    document.documentElement.removeAttribute("data-theme");
+
+    const handle = createLiquidGlassPanel(container, { theme: "auto" });
+    expect(container.style.backgroundColor).toContain("255, 255, 255"); // Light mode
+
+    // Toggle to dark mode via class
+    document.documentElement.classList.add("dark");
+    // Allow MutationObserver microtask to flush
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(container.style.backgroundColor).toContain("15, 23, 42"); // Dark mode
+
+    // Toggle back to light mode
+    document.documentElement.classList.remove("dark");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(container.style.backgroundColor).toContain("255, 255, 255"); // Light mode
+
+    handle.destroy();
+  });
+
+  it("should dynamically adapt styles when data-theme changes in auto theme", async () => {
+    document.documentElement.classList.remove("dark");
+    document.documentElement.removeAttribute("data-theme");
+
+    const handle = createLiquidGlassPanel(container, { theme: "auto" });
+    expect(container.style.backgroundColor).toContain("255, 255, 255");
+
+    // Toggle to dark mode via data-theme
+    document.documentElement.setAttribute("data-theme", "dark");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(container.style.backgroundColor).toContain("15, 23, 42");
+
+    document.documentElement.removeAttribute("data-theme");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(container.style.backgroundColor).toContain("255, 255, 255");
+
+    handle.destroy();
+  });
+
+  it("should not react to DOM mutations when theme is explicitly specified", async () => {
+    document.documentElement.classList.remove("dark");
+
+    const handle = createLiquidGlassPanel(container, { theme: "light" });
+    expect(container.style.backgroundColor).toContain("255, 255, 255");
+
+    // Add dark class - should remain light because theme is explicitly 'light'
+    document.documentElement.classList.add("dark");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(container.style.backgroundColor).toContain("255, 255, 255");
+
+    handle.destroy();
+    document.documentElement.classList.remove("dark");
+  });
 });

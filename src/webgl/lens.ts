@@ -13,6 +13,7 @@ export function createLiquidGlassLens(
     return {
       setPosition: () => {},
       update: () => {},
+      refresh: () => {},
       destroy: () => {},
     };
   }
@@ -143,6 +144,27 @@ export function createLiquidGlassLens(
 
   // Listeners
   window.addEventListener("scroll", scheduleRender, { passive: true });
+  window.addEventListener("resize", scheduleRender, { passive: true });
+
+  let backgroundTargetEl: Element | null = null;
+  const attachBackgroundListener = (selector?: string) => {
+    if (backgroundTargetEl) {
+      backgroundTargetEl.removeEventListener("liquid-glass:redraw", scheduleRender);
+      backgroundTargetEl = null;
+    }
+    if (selector && typeof document !== "undefined") {
+      const el = document.querySelector(selector);
+      if (el) {
+        backgroundTargetEl = el;
+        el.addEventListener("liquid-glass:redraw", scheduleRender);
+      }
+    }
+  };
+
+  if (currentOptions.backgroundSelector) {
+    attachBackgroundListener(currentOptions.backgroundSelector);
+  }
+
   const resizeObserver =
     typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => scheduleRender()) : null;
 
@@ -160,11 +182,14 @@ export function createLiquidGlassLens(
       if (dragController) {
         dragController.setPosition(x, y);
       } else {
-        renderFrame();
+        scheduleRender();
       }
     },
     update(newOptions: Partial<LensOptions>) {
       currentOptions = { ...currentOptions, ...newOptions };
+      if ("backgroundSelector" in newOptions) {
+        attachBackgroundListener(currentOptions.backgroundSelector);
+      }
       const wantsDrag = currentOptions.draggable || currentOptions.floating;
       if (wantsDrag && !dragController) {
         dragController = new DragPhysicsController({
@@ -182,6 +207,10 @@ export function createLiquidGlassLens(
         dragController = null;
       }
       renderFrame();
+      scheduleRender();
+    },
+    refresh() {
+      scheduleRender();
     },
     destroy() {
       isMounted = false;
@@ -190,6 +219,11 @@ export function createLiquidGlassLens(
         rafId = null;
       }
       window.removeEventListener("scroll", scheduleRender);
+      window.removeEventListener("resize", scheduleRender);
+      if (backgroundTargetEl) {
+        backgroundTargetEl.removeEventListener("liquid-glass:redraw", scheduleRender);
+        backgroundTargetEl = null;
+      }
       resizeObserver?.disconnect();
       dragController?.destroy();
       dragController = null;
