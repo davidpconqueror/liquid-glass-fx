@@ -9,4 +9,6 @@ dist
 .pnp.*
 docs/superpowers
 
+publish_commands.txt
+
 
