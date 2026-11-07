@@ -2621,6 +2621,9 @@ __metadata:
       optional: true
     react-dom:
       optional: true
+  bin:
+    liquid-glass-fx: ./bin/cli.mjs
+    liquid-glass-playground: ./bin/cli.mjs
   languageName: unknown
   linkType: soft
 
