@@ -11,6 +11,7 @@ export interface LiquidGlassLensProps {
   floating?: boolean;
   initialPosition?: { x: number; y: number };
   onPositionChange?: (pos: { x: number; y: number }) => void;
+  refreshKey?: unknown;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -27,6 +28,7 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
       floating,
       initialPosition,
       onPositionChange,
+      refreshKey,
       className,
       style,
       children,
@@ -53,10 +55,12 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
         onPositionChange,
       });
       handleRef.current = handle;
+      (el as any).__liquidGlassLens = handle;
 
       return () => {
         handle.destroy();
         handleRef.current = null;
+        delete (el as any).__liquidGlassLens;
       };
     }, []);
 
@@ -72,8 +76,18 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
           floating,
           onPositionChange,
         });
+        handleRef.current.refresh();
       }
-    }, [preset, config, background, backgroundSelector, draggable, floating, onPositionChange]);
+    }, [
+      preset,
+      config,
+      background,
+      backgroundSelector,
+      draggable,
+      floating,
+      onPositionChange,
+      refreshKey,
+    ]);
 
     const setRefs = React.useCallback(
       (node: HTMLDivElement | null) => {

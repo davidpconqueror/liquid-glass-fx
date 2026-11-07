@@ -394,43 +394,49 @@ Every glass element in `liquid-glass-fx` is governed by a unified physical optic
 
 ## Curated Presets
 
-`liquid-glass-fx` includes 6 carefully calibrated presets:
+`liquid-glass-fx` includes 7 carefully calibrated presets:
 
 ```typescript
 import { GLASS_PRESETS } from "liquid-glass-fx";
 ```
 
-### 1. `crystal`
+### 1. `liquid-glass` (alias `liquidGlass`)
+
+- **Characteristics:** Ultra-refractive fluid glass with maximum refraction power (`2.0`), high chromatic aberration (`0.27`), subtle surface distortion, and zero blur for crystalline transparency.
+- **Best for:** Liquid visual effects, fluid lenses, hero focal pieces, vibrant graphic distortions.
+- **Key values:** `refraction: 2`, `chromAberration: 0.27`, `edgeHighlight: 1.1`, `fresnel: 1.4`, `distortion: 0.1`, `zRadius: 100`, `blurAmount: 0`.
+
+### 2. `crystal`
 
 - **Characteristics:** Ultra-clear optical crown glass with high refraction, crisp specular glints, and visible chromatic dispersion.
 - **Best for:** Hero showcases, floating cards, navigation bars.
 - **Key values:** `refraction: 0.95`, `chromAberration: 0.12`, `edgeHighlight: 1.15`, `fresnel: 1.4`, `specular: 0.45`.
 
-### 2. `frosted`
+### 3. `frosted`
 
 - **Characteristics:** Soft sand-blasted diffuse glass with high blur and subdued edge reflections.
 - **Best for:** Modals, dialogs, sidebar panels, content backgrounds where text readability is paramount.
 - **Key values:** `blurAmount: 0.45`, `refraction: 0.35`, `chromAberration: 0.02`, `fresnel: 0.8`.
 
-### 3. `obsidian`
+### 4. `obsidian`
 
 - **Characteristics:** Deep tinted smoky black glass with strong contrast and rich shadows.
 - **Best for:** Dark mode UI, luxury dark aesthetics, code blocks.
 - **Key values:** `brightness: -0.15`, `shadowOpacity: 0.6`, `specular: 0.6`, `fresnel: 1.2`.
 
-### 4. `pill`
+### 5. `pill`
 
 - **Characteristics:** Stadium-rounded geometry (`cornerRadius: 9999`) with subtle bevel and tactile interactive press dynamics.
 - **Best for:** Buttons, floating badges, segmented pills, search bars.
 - **Key values:** `cornerRadius: 9999`, `zRadius: 20`, `button: true`.
 
-### 5. `magnifier`
+### 6. `magnifier`
 
 - **Characteristics:** Spherical dome magnifier (`bevelMode: 1`) that physically magnifies typography and graphics underneath with radial Snell dispersion.
 - **Best for:** Interactive Hero showcases, image zooming, lens inspection tools.
 - **Key values:** `bevelMode: 1`, `refraction: 1.5`, `chromAberration: 0.18`, `floating: true`.
 
-### 6. `default`
+### 7. `default`
 
 - **Characteristics:** Balanced everyday UI glass substrate providing immediate glassmorphic depth.
 
@@ -470,7 +476,48 @@ When using the WebGL lens engine (`createLiquidGlassLens` or `<LiquidGlassLens /
 
 ## Interactive Playground
 
-To experiment with live sliders for all 16 parameters, preset switching, theme toggling, and draggable WebGL lenses:
+`liquid-glass-fx` ships with a full interactive optical playground to experiment with live sliders for all 16 parameters, preset switching, theme toggling, draggable WebGL lenses, and instant preset export.
+
+### Running in Consuming Projects
+
+When `liquid-glass-fx` is installed in any external application, you can launch the bundled standalone playground with zero configuration or build overhead:
+
+```bash
+# Direct run via npx or yarn
+npx liquid-glass-fx playground
+# or
+yarn liquid-glass-fx playground
+```
+
+Or add a shortcut script to your project's `package.json`:
+
+```json
+{
+  "scripts": {
+    "playground": "liquid-glass-fx playground"
+  }
+}
+```
+
+Then simply run:
+
+```bash
+npm run playground
+# or
+yarn playground
+```
+
+The CLI starts a lightweight local server and automatically opens your browser.
+
+### Copying Custom Presets to Clipboard
+
+In the playground's **Optical Parameters** inspector:
+
+1. Tweak any optical sliders (blur, refraction, dispersion, specular highlights, corner radius, etc.).
+2. Click the **Copy** button next to **Reset**.
+3. The exact configuration is copied to your clipboard as formatted JSON matching `GlassConfig`, ready to paste into your app as a custom preset or inline config.
+
+### Local Development (in this repository)
 
 ```bash
 npm run playground

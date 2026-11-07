@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { LiquidGlassPanel, LiquidGlassLens } from "../../src/react";
 import { GLASS_PRESETS, type GlassPresetKey, type GlassConfig } from "../../src";
+import pkg from "../../package.json";
 
 type BackgroundKey = "aurora" | "blueprint" | "fluid" | "neon" | "checker";
 type LensSceneKey = "pattern" | "poster" | "architecture" | "art" | "photo" | "custom";
@@ -597,10 +598,13 @@ export function App() {
   const [activeTab, setActiveTab] = useState<"panel" | "lens">("panel");
   const [activeModal, setActiveModal] = useState<"docs" | "quickstart" | null>(null);
   const [copied, setCopied] = useState(false);
+  const [copiedConfig, setCopiedConfig] = useState(false);
   const [lensScene, setLensScene] = useState<LensSceneKey>("pattern");
   const [customImage, setCustomImage] = useState<HTMLImageElement | null>(null);
   const [curatedPhoto, setCuratedPhoto] = useState<HTMLImageElement | null>(null);
   const [lensPos, setLensPos] = useState({ x: 260, y: 150 });
+  const [lensSize, setLensSize] = useState({ width: 240, height: 240 });
+  const lensRef = useRef<HTMLDivElement | null>(null);
   const stageCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -609,6 +613,17 @@ export function App() {
       navigator.clipboard.writeText("npm install liquid-glass-fx");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+    }
+  };
+
+  const copyConfigAsJson = () => {
+    try {
+      const json = JSON.stringify(config, null, 2);
+      navigator.clipboard.writeText(json);
+      setCopiedConfig(true);
+      setTimeout(() => setCopiedConfig(false), 2000);
     } catch {
       // fallback
     }
@@ -635,6 +650,9 @@ export function App() {
         customImage,
         curatedPhoto
       );
+      stageCanvasRef.current.dispatchEvent(new CustomEvent("liquid-glass:redraw"));
+      (lensRef.current as any)?.__liquidGlassLens?.refresh();
+
       const handleResize = () => {
         if (stageCanvasRef.current) {
           drawStageBackdrop(
@@ -645,6 +663,8 @@ export function App() {
             customImage,
             curatedPhoto
           );
+          stageCanvasRef.current.dispatchEvent(new CustomEvent("liquid-glass:redraw"));
+          (lensRef.current as any)?.__liquidGlassLens?.refresh();
         }
       };
       window.addEventListener("resize", handleResize);
@@ -689,6 +709,7 @@ export function App() {
 
   const resetPreset = () => {
     setConfig(GLASS_PRESETS[selectedPreset]);
+    setLensSize({ width: 240, height: 240 });
   };
 
   return (
@@ -1026,7 +1047,7 @@ export function App() {
                 border: "1px solid rgba(255,255,255,0.18)",
               }}
             >
-              v0.1.1
+              v{pkg.version}
             </span>
           </div>
 
@@ -1541,17 +1562,19 @@ export function App() {
 
                 {/* Draggable WebGL Lens (True Snell Refraction over the stage) */}
                 <LiquidGlassLens
+                  ref={lensRef}
                   preset={selectedPreset}
                   config={config}
                   backgroundSelector="#lens-stage-canvas"
-                  background={`${bgTheme}-${theme}-${lensScene}-${customImage ? "cust" : ""}`}
+                  background={`${bgTheme}-${theme}-${lensScene}-${customImage ? "cust" : ""}-${curatedPhoto ? "photo" : ""}`}
+                  refreshKey={`${bgTheme}-${theme}-${lensScene}-${customImage ? "cust" : ""}-${curatedPhoto ? "photo" : ""}`}
                   draggable={true}
                   initialPosition={lensPos}
                   onPositionChange={setLensPos}
                   style={{
                     position: "absolute",
-                    width: 240,
-                    height: 240,
+                    width: lensSize.width,
+                    height: lensSize.height,
                     borderRadius: `${config.cornerRadius}px`,
                     zIndex: 10,
                   }}
@@ -1597,26 +1620,54 @@ export function App() {
                   <Sliders size={16} style={{ color: "#38bdf8" }} />
                   <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>Optical Parameters</h3>
                 </div>
-                <button
-                  onClick={resetPreset}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 4,
-                    background: theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
-                    border: "none",
-                    borderRadius: 8,
-                    padding: "4px 10px",
-                    fontSize: 11,
-                    color: "inherit",
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    transition: "all 0.15s ease",
-                  }}
-                >
-                  <RotateCcw size={11} />
-                  Reset
-                </button>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <button
+                    onClick={copyConfigAsJson}
+                    title="Copy current parameters as JSON"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                      background: theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                      border: "none",
+                      borderRadius: 8,
+                      padding: "4px 10px",
+                      fontSize: 11,
+                      color: "inherit",
+                      cursor: "pointer",
+                      fontWeight: 600,
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    {copiedConfig ? (
+                      <Check size={11} style={{ color: "#34d399" }} />
+                    ) : (
+                      <Copy size={11} />
+                    )}
+                    {copiedConfig ? "Copied!" : "Copy"}
+                  </button>
+                  <button
+                    onClick={resetPreset}
+                    title="Reset parameters to selected preset"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                      background: theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                      border: "none",
+                      borderRadius: 8,
+                      padding: "4px 10px",
+                      fontSize: 11,
+                      color: "inherit",
+                      cursor: "pointer",
+                      fontWeight: 600,
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    <RotateCcw size={11} />
+                    Reset
+                  </button>
+                </div>
               </div>
 
               {/* Scrollable Sliders & Presets Area with Inset Glass Scrollbar */}
@@ -1653,28 +1704,184 @@ export function App() {
                       marginTop: 8,
                     }}
                   >
-                    {(Object.keys(GLASS_PRESETS) as GlassPresetKey[]).map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => handlePresetChange(p)}
-                        style={{
-                          padding: "6px 8px",
-                          borderRadius: 10,
-                          fontSize: 12,
-                          border: "none",
-                          cursor: "pointer",
-                          fontWeight: selectedPreset === p ? 600 : 400,
-                          background:
-                            selectedPreset === p
+                    {(Object.keys(GLASS_PRESETS) as GlassPresetKey[])
+                      .filter((p) => p !== "liquidGlass")
+                      .map((p) => (
+                        <button
+                          key={p}
+                          onClick={() => handlePresetChange(p)}
+                          style={{
+                            padding: "6px 8px",
+                            borderRadius: 10,
+                            fontSize: 12,
+                            border: "none",
+                            cursor: "pointer",
+                            fontWeight: selectedPreset === p ? 600 : 400,
+                            background:
+                              selectedPreset === p
+                                ? "rgba(56, 189, 248, 0.35)"
+                                : "rgba(255,255,255,0.08)",
+                            color: "inherit",
+                            transition: "background 0.15s ease",
+                          }}
+                        >
+                          {p}
+                        </button>
+                      ))}
+                  </div>
+                </div>
+
+                {/* Lens Dimensions (Demo Experiment Only - Excluded from copied preset JSON) */}
+                <div
+                  style={{
+                    background:
+                      theme === "dark" ? "rgba(56, 189, 248, 0.06)" : "rgba(2, 132, 199, 0.05)",
+                    border:
+                      theme === "dark"
+                        ? "1px solid rgba(56, 189, 248, 0.2)"
+                        : "1px solid rgba(2, 132, 199, 0.15)",
+                    borderRadius: 14,
+                    padding: "12px 14px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <label
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        opacity: 0.85,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        color: "#38bdf8",
+                      }}
+                    >
+                      Lens Dimensions
+                    </label>
+                    <span
+                      style={{
+                        fontSize: 10,
+                        opacity: 0.55,
+                        fontStyle: "italic",
+                      }}
+                    >
+                      (Excluded from copy)
+                    </span>
+                  </div>
+
+                  {/* Width slider */}
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: 12,
+                        marginBottom: 3,
+                      }}
+                    >
+                      <span style={{ opacity: 0.9 }}>Lens Width</span>
+                      <span style={{ opacity: 0.7, fontFamily: "monospace" }}>
+                        {lensSize.width}px
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={120}
+                      max={480}
+                      step={5}
+                      value={lensSize.width}
+                      onChange={(e) =>
+                        setLensSize((s) => ({ ...s, width: parseInt(e.target.value, 10) }))
+                      }
+                      style={{
+                        width: "100%",
+                        accentColor: "#38bdf8",
+                        cursor: "pointer",
+                        height: 4,
+                      }}
+                    />
+                  </div>
+
+                  {/* Height slider */}
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: 12,
+                        marginBottom: 3,
+                      }}
+                    >
+                      <span style={{ opacity: 0.9 }}>Lens Height</span>
+                      <span style={{ opacity: 0.7, fontFamily: "monospace" }}>
+                        {lensSize.height}px
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={120}
+                      max={450}
+                      step={5}
+                      value={lensSize.height}
+                      onChange={(e) =>
+                        setLensSize((s) => ({ ...s, height: parseInt(e.target.value, 10) }))
+                      }
+                      style={{
+                        width: "100%",
+                        accentColor: "#38bdf8",
+                        cursor: "pointer",
+                        height: 4,
+                      }}
+                    />
+                  </div>
+
+                  {/* Quick aspect ratio presets */}
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gap: 5,
+                      marginTop: 2,
+                    }}
+                  >
+                    {[
+                      { label: "240×240", w: 240, h: 240 },
+                      { label: "340×200", w: 340, h: 200 },
+                      { label: "200×320", w: 200, h: 320 },
+                    ].map(({ label, w, h }) => {
+                      const isSelected = lensSize.width === w && lensSize.height === h;
+                      return (
+                        <button
+                          key={label}
+                          onClick={() => setLensSize({ width: w, height: h })}
+                          style={{
+                            padding: "4px 6px",
+                            borderRadius: 8,
+                            fontSize: 10.5,
+                            border: "none",
+                            cursor: "pointer",
+                            fontWeight: isSelected ? 600 : 400,
+                            background: isSelected
                               ? "rgba(56, 189, 248, 0.35)"
-                              : "rgba(255,255,255,0.08)",
-                          color: "inherit",
-                          transition: "background 0.15s ease",
-                        }}
-                      >
-                        {p}
-                      </button>
-                    ))}
+                              : theme === "dark"
+                                ? "rgba(255, 255, 255, 0.08)"
+                                : "rgba(0, 0, 0, 0.05)",
+                            color: "inherit",
+                            transition: "background 0.15s ease",
+                          }}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -2175,21 +2382,25 @@ createLiquidGlassLens(document.querySelector("#my-lens"), { draggable: true });`
                     </div>
                   </div>
 
-                  {/* 6 Curated Presets */}
+                  {/* 7 Curated Presets */}
                   <div>
                     <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>
-                      6 Curated Optical Presets
+                      7 Curated Optical Presets
                     </h3>
                     <div
                       style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}
                     >
                       {[
-                        { name: "default", desc: "Balanced everyday frosted glass for UI layouts" },
+                        {
+                          name: "liquid-glass",
+                          desc: "Ultra-refractive fluid glass with 2.0x Snell bend and chromatic dispersion",
+                        },
                         { name: "crystal", desc: "Ultra-sharp biconvex glass with chromatic rim" },
                         { name: "frosted", desc: "Heavy Gaussian diffusion with low specular" },
                         { name: "obsidian", desc: "High-contrast dark smoky optical glass" },
                         { name: "pill", desc: "Fully rounded pill button meniscus" },
                         { name: "magnifier", desc: "High-magnification Dome lens mode" },
+                        { name: "default", desc: "Balanced everyday frosted glass for UI layouts" },
                       ].map((p) => (
                         <div
                           key={p.name}

@@ -1,4 +1,5 @@
 import type { GlassConfig } from "../types";
+import { resolveIsDark } from "./theme-observer";
 
 export function computeGlassStyle(
   config: GlassConfig,
@@ -64,11 +65,7 @@ export function computeGlassStyle(
   ].join(", ");
 
   // 3. Theme substrate background
-  const isDark =
-    theme === "dark" ||
-    (theme === "auto" &&
-      typeof document !== "undefined" &&
-      document.documentElement.classList.contains("dark"));
+  const isDark = resolveIsDark(theme);
 
   const bgSubstrate = isDark
     ? `rgba(15, 23, 42, ${(0.35 + tintStrength * 0.2).toFixed(2)})`

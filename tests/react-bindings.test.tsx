@@ -150,4 +150,40 @@ describe("React Bindings", () => {
       root.unmount();
     });
   });
+
+  it("should dynamically react to theme changes when theme='auto'", async () => {
+    document.documentElement.classList.remove("dark");
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <LiquidGlassPanel preset="default" theme="auto" data-testid="auto-panel">
+          Content
+        </LiquidGlassPanel>
+      );
+    });
+
+    const panel = container.querySelector('[data-testid="auto-panel"]') as HTMLElement;
+    expect(panel.style.backgroundColor).toContain("255, 255, 255");
+
+    // Toggle dark class
+    await act(async () => {
+      document.documentElement.classList.add("dark");
+      await new Promise((r) => setTimeout(r, 10));
+    });
+
+    expect(panel.style.backgroundColor).toContain("15, 23, 42");
+
+    // Toggle back to light
+    await act(async () => {
+      document.documentElement.classList.remove("dark");
+      await new Promise((r) => setTimeout(r, 10));
+    });
+
+    expect(panel.style.backgroundColor).toContain("255, 255, 255");
+
+    await act(async () => {
+      root.unmount();
+    });
+  });
 });

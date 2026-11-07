@@ -28,7 +28,7 @@ describe("Optical Configuration & Presets", () => {
     });
   });
 
-  it("should define all 6 curated presets with valid keys", () => {
+  it("should define all 7 curated presets with valid keys", () => {
     const keys: GlassPresetKey[] = [
       "default",
       "crystal",
@@ -36,6 +36,8 @@ describe("Optical Configuration & Presets", () => {
       "obsidian",
       "pill",
       "magnifier",
+      "liquid-glass",
+      "liquidGlass",
     ];
     for (const key of keys) {
       expect(GLASS_PRESETS[key]).toBeDefined();
@@ -50,6 +52,11 @@ describe("Optical Configuration & Presets", () => {
     expect(GLASS_PRESETS.pill.cornerRadius).toBe(9999);
     expect(GLASS_PRESETS.magnifier.bevelMode).toBe(1);
     expect(GLASS_PRESETS.magnifier.floating).toBe(true);
+    expect(GLASS_PRESETS["liquid-glass"].refraction).toBe(2);
+    expect(GLASS_PRESETS["liquid-glass"].chromAberration).toBe(0.27);
+    expect(GLASS_PRESETS["liquid-glass"].edgeHighlight).toBe(1.1);
+    expect(GLASS_PRESETS["liquid-glass"].zRadius).toBe(100);
+    expect(GLASS_PRESETS.liquidGlass).toEqual(GLASS_PRESETS["liquid-glass"]);
   });
 
   it("should resolve config using preset and apply partial overrides", () => {

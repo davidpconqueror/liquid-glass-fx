@@ -20,7 +20,15 @@ export interface GlassConfig {
   button?: boolean;
 }
 
-export type GlassPresetKey = "default" | "crystal" | "frosted" | "obsidian" | "pill" | "magnifier";
+export type GlassPresetKey =
+  | "default"
+  | "crystal"
+  | "frosted"
+  | "obsidian"
+  | "pill"
+  | "magnifier"
+  | "liquid-glass"
+  | "liquidGlass";
 
 export interface PresetStyleDefinition {
   substrateLight: string;
@@ -56,5 +64,6 @@ export interface LensOptions {
 export interface LiquidGlassLensHandle {
   setPosition: (x: number, y: number) => void;
   update: (newOptions: Partial<LensOptions>) => void;
+  refresh: () => void;
   destroy: () => void;
 }
