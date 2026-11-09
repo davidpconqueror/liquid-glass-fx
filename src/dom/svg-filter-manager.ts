@@ -62,3 +62,18 @@ export function injectGlassSvgDefs(doc: Document = document): SVGElement | null 
   doc.body.appendChild(svg);
   return svg;
 }
+
+export function ensureGlassSvgDefs(doc: Document = document): SVGElement | null {
+  if (typeof doc === "undefined" || typeof document === "undefined") {
+    return null;
+  }
+  const targetDoc = doc || document;
+  if (!targetDoc.body) {
+    return null;
+  }
+  const existing = targetDoc.getElementById(SVG_DEFS_ID);
+  if (existing) {
+    return existing as unknown as SVGElement;
+  }
+  return injectGlassSvgDefs(targetDoc);
+}

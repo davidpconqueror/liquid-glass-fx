@@ -186,4 +186,146 @@ describe("React Bindings", () => {
       root.unmount();
     });
   });
+
+  it("should auto-inject SVG defs on mount and apply baseline structural styles", async () => {
+    document.getElementById("liquid-glass-svg-defs")?.remove();
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(<LiquidGlassPanel data-testid="structural-panel">Structural</LiquidGlassPanel>);
+    });
+
+    expect(document.getElementById("liquid-glass-svg-defs")).not.toBeNull();
+    const panel = container.querySelector('[data-testid="structural-panel"]') as HTMLElement;
+    expect(panel.style.position).toBe("relative");
+    expect(panel.style.isolation).toBe("isolate");
+    expect(panel.style.overflow).toBe("hidden");
+
+    await act(async () => {
+      root.unmount();
+    });
+  });
+
+  it("should apply borderRadius: 9999px for pill presets or cornerRadius >= 9999", async () => {
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <LiquidGlassPanel preset="pill" data-testid="pill-panel">
+          Pill
+        </LiquidGlassPanel>
+      );
+    });
+
+    const panel = container.querySelector('[data-testid="pill-panel"]') as HTMLElement;
+    expect(panel.style.borderRadius).toBe("9999px");
+
+    await act(async () => {
+      root.unmount();
+    });
+  });
+
+  it("should support flat parameter tweaks and not leak them to DOM attributes", async () => {
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <LiquidGlassPanel
+          preset="frosted"
+          blurAmount={0.35}
+          refraction={1.2}
+          cornerRadius={25}
+          data-testid="tweaked-panel"
+        >
+          Tweaked
+        </LiquidGlassPanel>
+      );
+    });
+
+    const panel = container.querySelector('[data-testid="tweaked-panel"]') as HTMLElement;
+    expect(panel).not.toBeNull();
+    expect(panel.getAttribute("bluramount")).toBeNull();
+    expect(panel.getAttribute("blurAmount")).toBeNull();
+    expect(panel.getAttribute("refraction")).toBeNull();
+    expect(panel.getAttribute("cornerRadius")).toBeNull();
+
+    await act(async () => {
+      root.unmount();
+    });
+  });
+
+  it("should support tweaks and overrides object prop and prioritize flat props", async () => {
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <LiquidGlassPanel
+          preset="frosted"
+          tweaks={{ blurAmount: 0.1, refraction: 0.5 }}
+          refraction={0.88}
+          data-testid="hybrid-panel"
+        >
+          Hybrid
+        </LiquidGlassPanel>
+      );
+    });
+
+    const panel = container.querySelector('[data-testid="hybrid-panel"]') as HTMLElement;
+    expect(panel).not.toBeNull();
+    expect(panel.getAttribute("tweaks")).toBeNull();
+
+    await act(async () => {
+      root.unmount();
+    });
+  });
+
+  it("should apply button tactile styles when button={true} or as='button'", async () => {
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <LiquidGlassPanel button={true} data-testid="tactile-button">
+          Press Me
+        </LiquidGlassPanel>
+      );
+    });
+
+    const btn = container.querySelector('[data-testid="tactile-button"]') as HTMLElement;
+    expect(btn.style.cursor).toBe("pointer");
+    expect(btn.style.userSelect).toBe("none");
+
+    await act(async () => {
+      root.unmount();
+    });
+  });
+
+  it("should support backgroundSource alias, tweaks, and auto-defs on LiquidGlassLens", async () => {
+    document.getElementById("liquid-glass-svg-defs")?.remove();
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <LiquidGlassLens
+          backgroundSource="viewport"
+          refraction={1.5}
+          tweaks={{ blurAmount: 0.2 }}
+          data-testid="lens-aliased"
+        >
+          Lens Child
+        </LiquidGlassLens>
+      );
+    });
+
+    expect(document.getElementById("liquid-glass-svg-defs")).not.toBeNull();
+    const lens = container.querySelector('[data-testid="lens-aliased"]') as HTMLElement;
+    expect(lens).not.toBeNull();
+    expect(lens.getAttribute("backgroundSource")).toBeNull();
+    expect(lens.getAttribute("backgroundsource")).toBeNull();
+    expect(lens.getAttribute("refraction")).toBeNull();
+    expect(lens.getAttribute("tweaks")).toBeNull();
+
+    await act(async () => {
+      root.unmount();
+    });
+  });
 });

@@ -2,6 +2,7 @@
 export type {
   GlassConfig,
   GlassPresetKey,
+  CustomGlassPresetsRegistry,
   PresetStyleDefinition,
   PanelOptions,
   LiquidGlassPanelHandle,
@@ -12,13 +13,24 @@ export type {
 
 // Optical configuration & presets
 export { DEFAULT_GLASS_CONFIG, resolveGlassConfig } from "./config";
-export { GLASS_PRESETS, PRESET_STYLES } from "./presets";
+export {
+  GLASS_PRESETS,
+  PRESET_STYLES,
+  registerGlassPresets,
+  getGlassPresets,
+  normalizePresetKey,
+} from "./presets";
 
 // DOM & CSS substrate engine
 export { createLiquidGlassPanel } from "./dom/panel";
 export { computeGlassStyle } from "./dom/styles";
 export { resolveIsDark, subscribeToAutoTheme } from "./dom/theme-observer";
-export { injectGlassSvgDefs, SVG_DEFS_ID, SVG_FILTER_ID } from "./dom/svg-filter-manager";
+export {
+  injectGlassSvgDefs,
+  ensureGlassSvgDefs,
+  SVG_DEFS_ID,
+  SVG_FILTER_ID,
+} from "./dom/svg-filter-manager";
 
 // WebGL optical engine
 export { createLiquidGlassLens } from "./webgl/lens";

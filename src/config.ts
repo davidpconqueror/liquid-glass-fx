@@ -1,5 +1,5 @@
 import type { GlassConfig, GlassPresetKey } from "./types";
-import { GLASS_PRESETS } from "./presets";
+import { getGlassPresets, normalizePresetKey } from "./presets";
 
 export const DEFAULT_GLASS_CONFIG: GlassConfig = {
   blurAmount: 0.19,
@@ -31,10 +31,28 @@ function clamp(value: number, min: number, max: number, fallback: number): numbe
 }
 
 export function resolveGlassConfig(
-  preset: GlassPresetKey = "default",
+  preset?: GlassPresetKey | Partial<GlassConfig>,
   overrides?: Partial<GlassConfig>
 ): GlassConfig {
-  const basePreset = GLASS_PRESETS[preset] ?? GLASS_PRESETS.default;
+  let basePreset: GlassConfig;
+
+  if (preset && typeof preset === "object") {
+    basePreset = { ...DEFAULT_GLASS_CONFIG, ...preset };
+  } else {
+    const rawKey = typeof preset === "string" ? preset : "default";
+    const normalized = normalizePresetKey(rawKey);
+    const presets = getGlassPresets();
+
+    if (presets[rawKey]) {
+      basePreset = presets[rawKey];
+    } else if (presets[normalized]) {
+      basePreset = presets[normalized];
+    } else {
+      const matchedKey = Object.keys(presets).find((k) => normalizePresetKey(k) === normalized);
+      basePreset = matchedKey ? presets[matchedKey] : (presets.default ?? DEFAULT_GLASS_CONFIG);
+    }
+  }
+
   const merged: GlassConfig = {
     ...basePreset,
     ...(overrides || {}),

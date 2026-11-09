@@ -146,7 +146,7 @@ lens.destroy();
 
 ### 2. React / Next.js (App Router & Pages)
 
-Import components from the subpath export `liquid-glass-fx/react`:
+Use components directly from `liquid-glass-fx/react` with **zero adapter boilerplate**:
 
 ```tsx
 "use client";
@@ -157,10 +157,16 @@ import { LiquidGlassPanel, LiquidGlassLens } from "liquid-glass-fx/react";
 export function GlassShowcase() {
   return (
     <div style={{ position: "relative", minHeight: "100vh", padding: 32 }}>
-      {/* Polymorphic Glass Navigation Bar */}
+      {/* 
+        Polymorphic Glass Navigation Bar 
+        Tweak any preset parameters directly as flat props (e.g. blurAmount, refraction)
+      */}
       <LiquidGlassPanel
         as="nav"
         preset="crystal"
+        blurAmount={0.12} // Custom tweak for this specific navbar
+        refraction={0.85}
+        cornerRadius={24}
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -170,7 +176,7 @@ export function GlassShowcase() {
       >
         <span style={{ fontWeight: 700 }}>Brand</span>
 
-        {/* Glass Action Button with tactile press scale */}
+        {/* Glass Action Button with built-in tactile press scale */}
         <LiquidGlassPanel
           as="button"
           preset="pill"
@@ -181,11 +187,8 @@ export function GlassShowcase() {
         </LiquidGlassPanel>
       </LiquidGlassPanel>
 
-      {/* Glass UI Card */}
-      <LiquidGlassPanel
-        preset="frosted"
-        style={{ maxWidth: 480, margin: "40px auto", padding: 32 }}
-      >
+      {/* Glass UI Card using built-in 'card' preset */}
+      <LiquidGlassPanel preset="card" style={{ maxWidth: 480, margin: "40px auto", padding: 32 }}>
         <h3>Refractive UI Card</h3>
         <p>Zero DOM serialization stutter, locked 120 FPS.</p>
       </LiquidGlassPanel>
@@ -194,6 +197,7 @@ export function GlassShowcase() {
       <LiquidGlassLens
         preset="magnifier"
         draggable
+        backgroundSource="/hero-mesh.jpg"
         initialPosition={{ x: 100, y: 120 }}
         style={{ width: 220, height: 220, borderRadius: "50%" }}
       />
@@ -201,6 +205,98 @@ export function GlassShowcase() {
   );
 }
 ```
+
+---
+
+### 3. Fine-Tuning & Tweaking Presets Per Component
+
+You don't need to define a new preset whenever you want to adjust one or two optical properties for a specific UI element. `liquid-glass-fx` supports a **hybrid approach**:
+
+#### Option A: Flat Top-Level Props (Maximum DX & JSX Ergonomics)
+
+Any of the 16 `GlassConfig` parameters can be supplied directly as top-level JSX props. They cleanly override the preset and are automatically stripped so they never leak into DOM attributes:
+
+```tsx
+<LiquidGlassPanel
+  preset="frosted"
+  blurAmount={0.2} // Override frosted blur for extra background legibility
+  refraction={0.8} // Boost refractive ray bending
+  cornerRadius={16} // Match your design system's border radius
+  className="p-6"
+>
+  <CardContent />
+</LiquidGlassPanel>
+```
+
+#### Option B: Dedicated `tweaks` / `overrides` Object
+
+If tweaks are generated dynamically or grouped:
+
+```tsx
+<LiquidGlassPanel
+  preset="obsidian"
+  tweaks={{
+    brightness: -0.05,
+    shadowSpread: 18,
+    shadowOpacity: 0.4,
+  }}
+>
+  <Navbar />
+</LiquidGlassPanel>
+```
+
+**Resolution Priority:**
+$$\text{Default Config} \longrightarrow \text{Base Preset} \longrightarrow \text{tweaks / overrides / config} \longrightarrow \text{Flat Props}$$
+
+---
+
+### 4. Dynamic Preset Registration (`registerGlassPresets`)
+
+Consuming applications can register custom brand presets at runtime (e.g. at app boot, in `_app.tsx`, or in a layout file):
+
+```typescript
+import { registerGlassPresets } from "liquid-glass-fx";
+
+registerGlassPresets({
+  skill_grid: {
+    blurAmount: 0.12,
+    refraction: 0.92,
+    chromAberration: 0.08,
+    edgeHighlight: 0.15,
+    specular: 0.55,
+    fresnel: 0.3,
+    cornerRadius: 36,
+  },
+  search_field: {
+    cornerRadius: 50,
+    zRadius: 18,
+    blurAmount: 0.09,
+    refraction: 0.45,
+    chromAberration: 0.24,
+  },
+});
+```
+
+#### TypeScript Autocompletion (Declaration Merging)
+
+Get full IDE autocomplete for your custom presets across your whole codebase:
+
+```typescript
+// in ambient.d.ts or glass.d.ts
+declare module "liquid-glass-fx" {
+  interface CustomGlassPresetsRegistry {
+    skill_grid: true;
+    search_field: true;
+  }
+}
+```
+
+#### Preset Name Normalization
+
+Preset keys are case-insensitive and tolerate hyphens, underscores, and camelCase:
+`preset="liquid-glass"` $\equiv$ `preset="liquidGlass"` $\equiv$ `preset="liquid_glass"`.
+
+---
 
 ---
 
@@ -436,7 +532,19 @@ import { GLASS_PRESETS } from "liquid-glass-fx";
 - **Best for:** Interactive Hero showcases, image zooming, lens inspection tools.
 - **Key values:** `bevelMode: 1`, `refraction: 1.5`, `chromAberration: 0.18`, `floating: true`.
 
-### 7. `default`
+### 7. `card` (alias `grid`)
+
+- **Characteristics:** Low-distortion optical panel tailored for card grids, metric cards, and dashboard tiles with crystal readability and gentle specular depth.
+- **Best for:** Bento grids, content cards, dashboard panels.
+- **Key values:** `blurAmount: 0.12`, `refraction: 0.92`, `cornerRadius: 36`, `specular: 0.55`, `fresnel: 0.3`.
+
+### 8. `search_field` (alias `input`)
+
+- **Characteristics:** Pill-shaped optical chamber optimized for embedded form inputs and search fields, eliminating center-text blur distortion while preserving authentic glassy perimeter refraction.
+- **Best for:** Floating search bars, input fields, filter pills.
+- **Key values:** `cornerRadius: 50`, `blurAmount: 0.09`, `refraction: 0.45`, `chromAberration: 0.24`.
+
+### 9. `default`
 
 - **Characteristics:** Balanced everyday UI glass substrate providing immediate glassmorphic depth.
 

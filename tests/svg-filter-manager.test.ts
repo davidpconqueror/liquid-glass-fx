@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { injectGlassSvgDefs, SVG_FILTER_ID } from "../src/dom/svg-filter-manager";
+import {
+  injectGlassSvgDefs,
+  ensureGlassSvgDefs,
+  SVG_FILTER_ID,
+  SVG_DEFS_ID,
+} from "../src/dom/svg-filter-manager";
 
 describe("SVG Filter Manager", () => {
   beforeEach(() => {
@@ -25,5 +30,15 @@ describe("SVG Filter Manager", () => {
     expect(svg1).toBe(svg2);
     const elements = document.querySelectorAll("#liquid-glass-svg-defs");
     expect(elements.length).toBe(1);
+  });
+
+  it("ensureGlassSvgDefs automatically injects and returns existing if present", () => {
+    const el = ensureGlassSvgDefs(document);
+    expect(el).not.toBeNull();
+    expect(document.getElementById(SVG_DEFS_ID)).toBe(el);
+
+    const second = ensureGlassSvgDefs(document);
+    expect(second).toBe(el);
+    expect(document.querySelectorAll(`#${SVG_DEFS_ID}`).length).toBe(1);
   });
 });
