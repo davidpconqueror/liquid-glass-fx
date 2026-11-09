@@ -302,4 +302,34 @@ describe("React Bindings", () => {
       root.unmount();
     });
   });
+
+  it("should support backgroundSource alias, tweaks, and auto-defs on LiquidGlassLens", async () => {
+    document.getElementById("liquid-glass-svg-defs")?.remove();
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <LiquidGlassLens
+          backgroundSource="viewport"
+          refraction={1.5}
+          tweaks={{ blurAmount: 0.2 }}
+          data-testid="lens-aliased"
+        >
+          Lens Child
+        </LiquidGlassLens>
+      );
+    });
+
+    expect(document.getElementById("liquid-glass-svg-defs")).not.toBeNull();
+    const lens = container.querySelector('[data-testid="lens-aliased"]') as HTMLElement;
+    expect(lens).not.toBeNull();
+    expect(lens.getAttribute("backgroundSource")).toBeNull();
+    expect(lens.getAttribute("backgroundsource")).toBeNull();
+    expect(lens.getAttribute("refraction")).toBeNull();
+    expect(lens.getAttribute("tweaks")).toBeNull();
+
+    await act(async () => {
+      root.unmount();
+    });
+  });
 });

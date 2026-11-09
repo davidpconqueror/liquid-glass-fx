@@ -1,11 +1,19 @@
 import * as React from "react";
 import type { BackgroundSource, GlassConfig, GlassPresetKey } from "../types";
 import { createLiquidGlassLens } from "../webgl/lens";
+import { ensureGlassSvgDefs } from "../dom/svg-filter-manager";
+import { GLASS_CONFIG_KEYS } from "./liquid-glass-panel";
 
-export interface LiquidGlassLensProps {
-  preset?: GlassPresetKey;
+const GLASS_CONFIG_SET = new Set<string>(GLASS_CONFIG_KEYS);
+
+export interface LiquidGlassLensProps extends Partial<GlassConfig> {
+  preset?: GlassPresetKey | Partial<GlassConfig>;
   config?: Partial<GlassConfig>;
+  tweaks?: Partial<GlassConfig>;
+  overrides?: Partial<GlassConfig>;
   background?: BackgroundSource;
+  /** Alias for background */
+  backgroundSource?: BackgroundSource;
   backgroundSelector?: string;
   draggable?: boolean;
   floating?: boolean;
@@ -22,7 +30,10 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
     {
       preset = "magnifier",
       config,
+      tweaks,
+      overrides,
       background,
+      backgroundSource,
       backgroundSelector,
       draggable,
       floating,
@@ -32,12 +43,49 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
       className,
       style,
       children,
-      ...props
+      ...restProps
     },
     forwardedRef
   ) {
     const internalRef = React.useRef<HTMLDivElement | null>(null);
     const handleRef = React.useRef<ReturnType<typeof createLiquidGlassLens> | null>(null);
+
+    const resolvedBackground = background ?? backgroundSource;
+
+    // Extract flat glass configuration props and strip them from DOM attributes
+    const { flatGlassOverrides, domProps } = React.useMemo(() => {
+      const flatOverrides: Partial<GlassConfig> = {};
+      const cleanProps: Record<string, unknown> = {};
+
+      for (const [key, value] of Object.entries(restProps)) {
+        if (GLASS_CONFIG_SET.has(key)) {
+          if (value !== undefined) {
+            (flatOverrides as any)[key] = value;
+          }
+        } else if (
+          key !== "tweaks" &&
+          key !== "overrides" &&
+          key !== "backgroundSource"
+        ) {
+          cleanProps[key] = value;
+        }
+      }
+
+      return { flatGlassOverrides: flatOverrides, domProps: cleanProps };
+    }, [restProps]);
+
+    const mergedOverrides = React.useMemo<Partial<GlassConfig>>(() => {
+      return {
+        ...(config || {}),
+        ...(tweaks || {}),
+        ...(overrides || {}),
+        ...flatGlassOverrides,
+      };
+    }, [config, tweaks, overrides, flatGlassOverrides]);
+
+    React.useEffect(() => {
+      ensureGlassSvgDefs();
+    }, []);
 
     // Mount lens once on the container
     React.useEffect(() => {
@@ -45,9 +93,9 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
       if (!el) return;
 
       const handle = createLiquidGlassLens(el, {
-        preset,
-        config,
-        background,
+        preset: typeof preset === "string" ? preset : "default",
+        config: mergedOverrides,
+        background: resolvedBackground,
         backgroundSelector,
         draggable,
         floating,
@@ -68,9 +116,9 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
     React.useEffect(() => {
       if (handleRef.current) {
         handleRef.current.update({
-          preset,
-          config,
-          background,
+          preset: typeof preset === "string" ? preset : "default",
+          config: mergedOverrides,
+          background: resolvedBackground,
           backgroundSelector,
           draggable,
           floating,
@@ -80,8 +128,8 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
       }
     }, [
       preset,
-      config,
-      background,
+      mergedOverrides,
+      resolvedBackground,
       backgroundSelector,
       draggable,
       floating,
@@ -105,7 +153,7 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
       <div
         ref={setRefs}
         data-liquid-glass-lens="true"
-        data-preset={preset}
+        data-preset={typeof preset === "string" ? preset : "custom"}
         className={className}
         style={{
           position: "relative",
@@ -113,7 +161,7 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
           overflow: "hidden",
           ...style,
         }}
-        {...props}
+        {...(domProps as any)}
       >
         {children}
       </div>
