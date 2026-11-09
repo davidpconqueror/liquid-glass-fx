@@ -164,7 +164,7 @@ export function GlassShowcase() {
       <LiquidGlassPanel
         as="nav"
         preset="crystal"
-        blurAmount={0.12}       // Custom tweak for this specific navbar
+        blurAmount={0.12} // Custom tweak for this specific navbar
         refraction={0.85}
         cornerRadius={24}
         style={{
@@ -188,10 +188,7 @@ export function GlassShowcase() {
       </LiquidGlassPanel>
 
       {/* Glass UI Card using built-in 'card' preset */}
-      <LiquidGlassPanel
-        preset="card"
-        style={{ maxWidth: 480, margin: "40px auto", padding: 32 }}
-      >
+      <LiquidGlassPanel preset="card" style={{ maxWidth: 480, margin: "40px auto", padding: 32 }}>
         <h3>Refractive UI Card</h3>
         <p>Zero DOM serialization stutter, locked 120 FPS.</p>
       </LiquidGlassPanel>
@@ -216,14 +213,15 @@ export function GlassShowcase() {
 You don't need to define a new preset whenever you want to adjust one or two optical properties for a specific UI element. `liquid-glass-fx` supports a **hybrid approach**:
 
 #### Option A: Flat Top-Level Props (Maximum DX & JSX Ergonomics)
+
 Any of the 16 `GlassConfig` parameters can be supplied directly as top-level JSX props. They cleanly override the preset and are automatically stripped so they never leak into DOM attributes:
 
 ```tsx
 <LiquidGlassPanel
   preset="frosted"
-  blurAmount={0.2}       // Override frosted blur for extra background legibility
-  refraction={0.8}       // Boost refractive ray bending
-  cornerRadius={16}      // Match your design system's border radius
+  blurAmount={0.2} // Override frosted blur for extra background legibility
+  refraction={0.8} // Boost refractive ray bending
+  cornerRadius={16} // Match your design system's border radius
   className="p-6"
 >
   <CardContent />
@@ -231,6 +229,7 @@ Any of the 16 `GlassConfig` parameters can be supplied directly as top-level JSX
 ```
 
 #### Option B: Dedicated `tweaks` / `overrides` Object
+
 If tweaks are generated dynamically or grouped:
 
 ```tsx
@@ -279,6 +278,7 @@ registerGlassPresets({
 ```
 
 #### TypeScript Autocompletion (Declaration Merging)
+
 Get full IDE autocomplete for your custom presets across your whole codebase:
 
 ```typescript
@@ -292,6 +292,7 @@ declare module "liquid-glass-fx" {
 ```
 
 #### Preset Name Normalization
+
 Preset keys are case-insensitive and tolerate hyphens, underscores, and camelCase:
 `preset="liquid-glass"` $\equiv$ `preset="liquidGlass"` $\equiv$ `preset="liquid_glass"`.
 

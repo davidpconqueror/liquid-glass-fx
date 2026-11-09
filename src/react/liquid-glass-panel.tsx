@@ -32,8 +32,9 @@ export const GLASS_CONFIG_KEYS: (keyof GlassConfig)[] = [
 
 const GLASS_CONFIG_SET = new Set<string>(GLASS_CONFIG_KEYS);
 
-export interface LiquidGlassPanelProps<T extends React.ElementType = "div">
-  extends Partial<GlassConfig> {
+export interface LiquidGlassPanelProps<
+  T extends React.ElementType = "div",
+> extends Partial<GlassConfig> {
   as?: T;
   preset?: GlassPresetKey | Partial<GlassConfig>;
   config?: Partial<GlassConfig>;
@@ -51,10 +52,7 @@ export type PolymorphicLiquidGlassPanelProps<T extends React.ElementType> =
   LiquidGlassPanelProps<T> &
     Omit<
       React.ComponentPropsWithoutRef<T>,
-      | keyof LiquidGlassPanelProps<T>
-      | keyof GlassConfig
-      | "tweaks"
-      | "overrides"
+      keyof LiquidGlassPanelProps<T> | keyof GlassConfig | "tweaks" | "overrides"
     >;
 
 export const LiquidGlassPanel = React.forwardRef(function LiquidGlassPanel<

@@ -62,11 +62,7 @@ export const LiquidGlassLens = React.forwardRef<HTMLDivElement, LiquidGlassLensP
           if (value !== undefined) {
             (flatOverrides as any)[key] = value;
           }
-        } else if (
-          key !== "tweaks" &&
-          key !== "overrides" &&
-          key !== "backgroundSource"
-        ) {
+        } else if (key !== "tweaks" && key !== "overrides" && key !== "backgroundSource") {
           cleanProps[key] = value;
         }
       }

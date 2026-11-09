@@ -192,11 +192,7 @@ describe("React Bindings", () => {
     const root = createRoot(container);
 
     await act(async () => {
-      root.render(
-        <LiquidGlassPanel data-testid="structural-panel">
-          Structural
-        </LiquidGlassPanel>
-      );
+      root.render(<LiquidGlassPanel data-testid="structural-panel">Structural</LiquidGlassPanel>);
     });
 
     expect(document.getElementById("liquid-glass-svg-defs")).not.toBeNull();

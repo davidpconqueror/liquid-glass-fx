@@ -262,9 +262,7 @@ export function normalizePresetKey(key: string): string {
 
 const runtimeCustomPresets: Record<string, GlassConfig> = {};
 
-export function registerGlassPresets(
-  customPresets: Record<string, Partial<GlassConfig>>
-): void {
+export function registerGlassPresets(customPresets: Record<string, Partial<GlassConfig>>): void {
   for (const [key, config] of Object.entries(customPresets)) {
     const base = GLASS_PRESETS.default;
     const resolved: GlassConfig = {
