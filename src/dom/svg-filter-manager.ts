@@ -63,8 +63,6 @@ export function injectGlassSvgDefs(doc: Document = document): SVGElement | null 
   return svg;
 }
 
-let defsInjected = false;
-
 export function ensureGlassSvgDefs(doc: Document = document): SVGElement | null {
   if (typeof doc === "undefined" || typeof document === "undefined") {
     return null;
@@ -75,12 +73,7 @@ export function ensureGlassSvgDefs(doc: Document = document): SVGElement | null 
   }
   const existing = targetDoc.getElementById(SVG_DEFS_ID);
   if (existing) {
-    defsInjected = true;
     return existing as unknown as SVGElement;
   }
-  const svg = injectGlassSvgDefs(targetDoc);
-  if (svg) {
-    defsInjected = true;
-  }
-  return svg;
+  return injectGlassSvgDefs(targetDoc);
 }
