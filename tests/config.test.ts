@@ -111,4 +111,56 @@ describe("Optical Configuration & Presets", () => {
     expect(resolved.opacity).toBe(0.7);
     expect(resolved.blurAmount).toBe(DEFAULT_GLASS_CONFIG.blurAmount);
   });
+
+  it("normalizes preset keys across kebab-case, camelCase, and snake_case", async () => {
+    const { normalizePresetKey } = await import("../src");
+    expect(normalizePresetKey("liquid-glass")).toBe("liquidglass");
+    expect(normalizePresetKey("liquid_glass")).toBe("liquidglass");
+    expect(normalizePresetKey("LiquidGlass")).toBe("liquidglass");
+  });
+
+  it("resolves presets regardless of case and separators", () => {
+    const config = resolveGlassConfig("liquid_glass" as any);
+    expect(config).toBeDefined();
+    expect(config.refraction).toBe(2);
+  });
+
+  it("allows registering custom presets dynamically", async () => {
+    const { registerGlassPresets, getGlassPresets } = await import("../src");
+    registerGlassPresets({
+      navbar_test: {
+        blurAmount: 0.42,
+        refraction: 1.11,
+      },
+    });
+
+    const registered = getGlassPresets();
+    expect(registered.navbar_test).toBeDefined();
+    expect(registered.navbar_test.blurAmount).toBe(0.42);
+
+    const resolved = resolveGlassConfig("navbar_test" as any);
+    expect(resolved.blurAmount).toBe(0.42);
+    expect(resolved.refraction).toBe(1.11);
+  });
+
+  it("supports passing a direct Partial<GlassConfig> object as preset", () => {
+    const resolved = resolveGlassConfig({ blurAmount: 0.05, refraction: 0.35 });
+    expect(resolved.blurAmount).toBe(0.05);
+    expect(resolved.refraction).toBe(0.35);
+  });
+
+  it("bundles input/search_field and card/grid presets out of the box", () => {
+    const searchField = resolveGlassConfig("search_field");
+    const input = resolveGlassConfig("input" as any);
+    expect(searchField).toBeDefined();
+    expect(input).toBeDefined();
+    expect(searchField.cornerRadius).toBe(50);
+    expect(input.cornerRadius).toBe(50);
+
+    const card = resolveGlassConfig("card" as any);
+    const grid = resolveGlassConfig("grid" as any);
+    expect(card).toBeDefined();
+    expect(grid).toBeDefined();
+    expect(card.cornerRadius).toBe(36);
+  });
 });

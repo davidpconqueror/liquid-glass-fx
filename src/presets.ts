@@ -169,7 +169,119 @@ export const GLASS_PRESETS: Record<GlassPresetKey, GlassConfig> = {
     floating: false,
     button: false,
   },
+  search_field: {
+    blurAmount: 0.09,
+    refraction: 0.45,
+    chromAberration: 0.24,
+    edgeHighlight: 0.15,
+    specular: 0.35,
+    fresnel: 0.39,
+    distortion: 0.0,
+    cornerRadius: 50,
+    zRadius: 18,
+    opacity: 0.95,
+    saturation: 0.0,
+    tintStrength: 0.0,
+    brightness: 0.3,
+    shadowOpacity: 0.2,
+    shadowSpread: 8,
+    shadowOffsetY: 1,
+    bevelMode: 0,
+    floating: false,
+    button: false,
+  },
+  input: {
+    blurAmount: 0.09,
+    refraction: 0.45,
+    chromAberration: 0.24,
+    edgeHighlight: 0.15,
+    specular: 0.35,
+    fresnel: 0.39,
+    distortion: 0.0,
+    cornerRadius: 50,
+    zRadius: 18,
+    opacity: 0.95,
+    saturation: 0.0,
+    tintStrength: 0.0,
+    brightness: 0.3,
+    shadowOpacity: 0.2,
+    shadowSpread: 8,
+    shadowOffsetY: 1,
+    bevelMode: 0,
+    floating: false,
+    button: false,
+  },
+  card: {
+    blurAmount: 0.12,
+    refraction: 0.92,
+    chromAberration: 0.08,
+    edgeHighlight: 0.15,
+    specular: 0.55,
+    fresnel: 0.3,
+    distortion: 0.0,
+    cornerRadius: 36,
+    zRadius: 20,
+    opacity: 0.94,
+    saturation: 0.12,
+    tintStrength: 0.0,
+    brightness: 0.34,
+    shadowOpacity: 0.25,
+    shadowSpread: 10,
+    shadowOffsetY: 2,
+    bevelMode: 0,
+    floating: false,
+    button: false,
+  },
+  grid: {
+    blurAmount: 0.12,
+    refraction: 0.92,
+    chromAberration: 0.08,
+    edgeHighlight: 0.15,
+    specular: 0.55,
+    fresnel: 0.3,
+    distortion: 0.0,
+    cornerRadius: 36,
+    zRadius: 20,
+    opacity: 0.94,
+    saturation: 0.12,
+    tintStrength: 0.0,
+    brightness: 0.34,
+    shadowOpacity: 0.25,
+    shadowSpread: 10,
+    shadowOffsetY: 2,
+    bevelMode: 0,
+    floating: false,
+    button: false,
+  },
 };
+
+export function normalizePresetKey(key: string): string {
+  if (!key || typeof key !== "string") return "default";
+  return key.toLowerCase().replace(/[-_]/g, "");
+}
+
+const runtimeCustomPresets: Record<string, GlassConfig> = {};
+
+export function registerGlassPresets(
+  customPresets: Record<string, Partial<GlassConfig>>
+): void {
+  for (const [key, config] of Object.entries(customPresets)) {
+    const base = GLASS_PRESETS.default;
+    const resolved: GlassConfig = {
+      ...base,
+      ...config,
+    };
+    const normalized = normalizePresetKey(key);
+    runtimeCustomPresets[key] = resolved;
+    runtimeCustomPresets[normalized] = resolved;
+    (GLASS_PRESETS as any)[key] = resolved;
+    (GLASS_PRESETS as any)[normalized] = resolved;
+  }
+}
+
+export function getGlassPresets(): Record<string, GlassConfig> {
+  return { ...GLASS_PRESETS, ...runtimeCustomPresets };
+}
 
 export const PRESET_STYLES: Record<GlassPresetKey, PresetStyleDefinition> = {
   default: {
@@ -203,5 +315,21 @@ export const PRESET_STYLES: Record<GlassPresetKey, PresetStyleDefinition> = {
   liquidGlass: {
     substrateLight: "rgba(255, 255, 255, 0.2)",
     substrateDark: "rgba(15, 23, 42, 0.15)",
+  },
+  search_field: {
+    substrateLight: "rgba(255, 255, 255, 0.5)",
+    substrateDark: "rgba(15, 23, 42, 0.4)",
+  },
+  input: {
+    substrateLight: "rgba(255, 255, 255, 0.5)",
+    substrateDark: "rgba(15, 23, 42, 0.4)",
+  },
+  card: {
+    substrateLight: "rgba(255, 255, 255, 0.45)",
+    substrateDark: "rgba(15, 23, 42, 0.35)",
+  },
+  grid: {
+    substrateLight: "rgba(255, 255, 255, 0.45)",
+    substrateDark: "rgba(15, 23, 42, 0.35)",
   },
 };

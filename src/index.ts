@@ -2,6 +2,7 @@
 export type {
   GlassConfig,
   GlassPresetKey,
+  CustomGlassPresetsRegistry,
   PresetStyleDefinition,
   PanelOptions,
   LiquidGlassPanelHandle,
@@ -12,7 +13,13 @@ export type {
 
 // Optical configuration & presets
 export { DEFAULT_GLASS_CONFIG, resolveGlassConfig } from "./config";
-export { GLASS_PRESETS, PRESET_STYLES } from "./presets";
+export {
+  GLASS_PRESETS,
+  PRESET_STYLES,
+  registerGlassPresets,
+  getGlassPresets,
+  normalizePresetKey,
+} from "./presets";
 
 // DOM & CSS substrate engine
 export { createLiquidGlassPanel } from "./dom/panel";

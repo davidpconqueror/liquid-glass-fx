@@ -20,6 +20,8 @@ export interface GlassConfig {
   button?: boolean;
 }
 
+export interface CustomGlassPresetsRegistry {}
+
 export type GlassPresetKey =
   | "default"
   | "crystal"
@@ -28,7 +30,12 @@ export type GlassPresetKey =
   | "pill"
   | "magnifier"
   | "liquid-glass"
-  | "liquidGlass";
+  | "liquidGlass"
+  | "input"
+  | "search_field"
+  | "card"
+  | "grid"
+  | (keyof CustomGlassPresetsRegistry & string);
 
 export interface PresetStyleDefinition {
   substrateLight: string;
